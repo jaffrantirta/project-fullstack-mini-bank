@@ -23,6 +23,8 @@ class User extends Authenticatable implements Wallet
      *
      * @var array<int, string>
      */
+    protected $guard_name = 'web';
+
     protected $fillable = [
         'name',
         'email',

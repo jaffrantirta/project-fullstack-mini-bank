@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -33,6 +35,7 @@ class ReinsertRolePermission extends Command
         $this->truncate();
         $this->createRolesAndPermissions();
         $this->assignPermissionToRoles();
+        $this->createSuperAdminUser();
         return Command::SUCCESS;
     }
 
@@ -49,16 +52,29 @@ class ReinsertRolePermission extends Command
         Role::insert($this->getRoles());
         Permission::insert($this->getPermissions());
     }
+    protected function createSuperAdminUser()
+    {
+        DB::table('users')->insert([
+            'id' => 1,
+            'name' => 'Super Admin',
+            'email' => 'super@admin',
+            'password' => Hash::make('superadmin'),
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        User::find(1)->assignRole('super-admin');
+    }
 
     protected function assignPermissionToRoles()
     {
         //give super-admin all permission
-        Role::findByName('super-admin', 'api')->givePermissionTo(
+        Role::findByName('super-admin', 'web')->givePermissionTo(
             Permission::get('name')->pluck('name')->toArray()
         );
 
         //school-employee & school admin
-        Role::findByName('school-employee', 'api')->givePermissionTo(
+        Role::findByName('school-employee', 'web')->givePermissionTo(
             //classroom
             'create-classroom',
             'create-many-classroom',
@@ -78,7 +94,7 @@ class ReinsertRolePermission extends Command
             'view-own-transaction',
         );
 
-        Role::findByName('school-admin', 'api')->givePermissionTo(
+        Role::findByName('school-admin', 'web')->givePermissionTo(
             //roles
             'assign-school-employee-role',
             'revoke-school-employee-role',
@@ -105,7 +121,15 @@ class ReinsertRolePermission extends Command
             'view-own-transaction',
         );
 
-        Role::findByName('student', 'api')->givePermissionTo('view-own-transaction');
+        Role::findByName('student-admin', 'web')->givePermissionTo(
+            //student
+            'create-transaction',
+            'create-many-transaction',
+            'view-any-transaction',
+            'view-own-transaction',
+        );
+
+        Role::findByName('student', 'web')->givePermissionTo('view-own-transaction');
     }
 
     protected function getPermissions(): array
@@ -114,44 +138,44 @@ class ReinsertRolePermission extends Command
             //roles
             [
                 'name' => 'assign-school-admin-role',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'assign-school-employee-role',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'revoke-school-admin-role',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'revoke-school-employee-role',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             //school
             [
                 'name' => 'create-school',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'edit-school',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'delete-school',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -159,25 +183,25 @@ class ReinsertRolePermission extends Command
             //classroom
             [
                 'name' => 'create-classroom',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'create-many-classroom',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'edit-classroom',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'delete-classroom',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -185,25 +209,25 @@ class ReinsertRolePermission extends Command
             //employee
             [
                 'name' => 'create-employee',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'create-many-employee',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'edit-employee',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'delete-employee',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -211,25 +235,25 @@ class ReinsertRolePermission extends Command
             //student
             [
                 'name' => 'create-student',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'create-many-student',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'edit-student',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'delete-student',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -237,25 +261,25 @@ class ReinsertRolePermission extends Command
             //transaction
             [
                 'name' => 'create-transaction',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'create-many-transaction',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'view-any-transaction',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'view-own-transaction',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -267,25 +291,31 @@ class ReinsertRolePermission extends Command
         return [
             [
                 'name' => 'school-employee',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'school-admin',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'student-admin',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'super-admin',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'student',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
