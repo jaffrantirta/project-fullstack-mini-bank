@@ -6,17 +6,19 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import Table from '@/Components/Table';
 import Td from '@/Components/Td';
+import TextInput from '@/Components/TextInput';
 import Th from '@/Components/Th';
 import Tr from '@/Components/Tr';
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { Head, Link, useForm } from '@inertiajs/react'
 import React, { useState } from 'react'
 
 export default function Index(props) {
     const [confirmingDeletion, setConfirmingDeletion] = useState(false);
-    const { data, setData, delete: destroy, processing, reset, hasErrors } = useForm({
+    const { data, setData, get, delete: destroy, processing, reset, hasErrors } = useForm({
         id: '',
+        search: '',
     });
 
     const closeModal = () => {
@@ -33,6 +35,27 @@ export default function Index(props) {
             onFinish: () => reset(),
         });
     };
+    const onSearch = (e) => {
+        e.preventDefault();
+
+        const search = data.search.trim();
+
+        if (search) {
+            get(route('employee.index', { q: search }), {
+                preserveScroll: true,
+                onSuccess: (data) => {
+                    setData(data);
+                },
+            });
+        } else {
+            get(route('employee.index'), {
+                preserveScroll: true,
+                onSuccess: (data) => {
+                    setData(data);
+                },
+            });
+        }
+    }
     console.log(props.employees.data);
     return (
         <Authenticated
@@ -46,9 +69,17 @@ export default function Index(props) {
         >
             <Head title='Staff Sekolah' />
 
-            <div className='flex justify-center md:justify-end p-10'>
-                <Link href={route('employee.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
+            <div className='grid grid-cols-1 md:grid-cols-2 p-10'>
+                <form onSubmit={onSearch} className="flex gap-3">
+                    <TextInput id="search" type="search" placeholder="Pencarian..." onChange={(e) => setData('search', e.target.value)} />
+                    <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
+                </form>
+                <div className='flex justify-end'>
+                    <Link href={route('employee.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
+                </div>
             </div>
+
+
 
             <div className='overflow-x-auto p-5 md:p-10'>
                 <Table>
@@ -61,7 +92,7 @@ export default function Index(props) {
                         </Tr>
                     </thead>
                     <tbody>
-                        {props.employees.data.map((employee, index) => (
+                        {props.employees.data.length > 0 ? props.employees.data.map((employee, index) => (
                             <Tr key={index}>
                                 <Td>{props.employees.from + index}</Td>
                                 <Td>{employee.user.name}</Td>
@@ -75,8 +106,15 @@ export default function Index(props) {
                                     }}><TrashIcon className='h-5 text-red-400' /></Link>
                                 </Td>
                             </Tr>
-                        ))}
+                        )) : (
+                            <Tr>
+                                <Td colSpan={4} className={'text-center'}>
+                                    Tidak ada staff ditemukan.
+                                </Td>
+                            </Tr>
+                        )}
                     </tbody>
+
                 </Table>
                 <Paginate className={'mt-5'} data={props.employees} />
             </div>

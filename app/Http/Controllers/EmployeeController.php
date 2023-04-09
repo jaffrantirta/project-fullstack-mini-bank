@@ -10,18 +10,39 @@ use App\Models\School;
 use App\Models\User;
 use App\Queries\EmployeeQuery;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class EmployeeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Employee::class);
+
+        $employees = Employee::with('user')->latest();
+
+        // check if a search term was entered
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $employees->where(function ($query) use ($search) {
+                $query->where('NIP', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%')
+                            ->orWhere('email', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+
+
+        $employees = $employees->paginate();
+
         return Inertia::render('Employee/Index', [
             'session' => session()->all(),
-            'employees' => Employee::with('user')->latest()->paginate(),
+            'employees' => $employees,
         ]);
     }
+
     public function create()
     {
         return Inertia::render('Employee/Create', [

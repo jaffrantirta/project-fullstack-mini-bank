@@ -5,18 +5,41 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SchoolStoreRequest;
 use App\Http\Requests\SchoolUpdateRequest;
 use App\Models\School;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SchoolController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorize('viewAny', School::class);
+        $this->authorize('viewAny', Employee::class);
+
+        $schools = School::latest();
+
+        // check if a search term was entered
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $schools->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('address', 'like', '%' . $search . '%');
+            });
+        }
+
+        $schools = $schools->paginate();
+
         return Inertia::render('School/Index', [
             'session' => session()->all(),
-            'schools' => School::latest()->paginate(),
+            'schools' => $schools,
         ]);
     }
+    // public function index()
+    // {
+    //     $this->authorize('viewAny', School::class);
+    //     return Inertia::render('School/Index', [
+    //         'session' => session()->all(),
+    //         'schools' => School::latest()->paginate(),
+    //     ]);
+    // }
     public function create()
     {
         return Inertia::render('School/Create', [
