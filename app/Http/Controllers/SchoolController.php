@@ -17,12 +17,16 @@ class SchoolController extends Controller
             'schools' => School::latest()->paginate(),
         ]);
     }
-
-
+    public function create()
+    {
+        return Inertia::render('School/Create', [
+            'session' => session()->all(),
+        ]);
+    }
     public function store(SchoolStoreRequest $request)
     {
         $school = School::create($request->validated());
-        return response($school);
+        return back();
     }
 
 
