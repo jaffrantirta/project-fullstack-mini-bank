@@ -6,13 +6,16 @@ use App\Http\Requests\SchoolStoreRequest;
 use App\Http\Requests\SchoolUpdateRequest;
 use App\Models\School;
 use App\Queries\SchoolQuery;
+use Inertia\Inertia;
 
 class SchoolController extends Controller
 {
     public function index()
     {
-        $this->authorize('viewAny', School::class);
-        return response((new SchoolQuery)->includes()->filterSortPaginate());
+        return Inertia::render('School/Index', [
+            'session' => session()->all(),
+            'schools' => School::latest()->paginate(),
+        ]);
     }
 
 

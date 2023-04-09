@@ -15,10 +15,14 @@ export default function Sidebar(props) {
                         <BoltIcon className='h-6 mr-3' />
                         <span className="text-gray-800 font-medium">Dashboard</span>
                     </SideLink>
-                    <SideLink href={route('school.index')} active={route().current('school.index')}>
-                        <HomeModernIcon className='h-6 mr-3' />
-                        <span className="text-gray-600">Sekolah</span>
-                    </SideLink>
+                    {props.session.roles && props.session.roles.some(role => role.name === 'super-admin') && (
+                        <>
+                            <SideLink href={route('school.index')} active={route().current('school.index')}>
+                                <HomeModernIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Sekolah</span>
+                            </SideLink>
+                        </>
+                    )}
                 </nav>
             </div>
         </div>

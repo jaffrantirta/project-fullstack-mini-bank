@@ -10,7 +10,7 @@ export default function Authenticated({ auth, header, children, ...props }) {
 
     return (
         <div className='w-full bg-red-600 flex'>
-            <Sidebar />
+            <Sidebar session={props.session} />
             <div className='flex-1'>
                 <div className="min-h-screen bg-gray-100">
                     <nav className="bg-white border-b border-gray-100">
