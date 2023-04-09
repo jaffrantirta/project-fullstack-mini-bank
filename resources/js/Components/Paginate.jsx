@@ -1,5 +1,4 @@
 import he from 'he';
-import NavLink from './NavLink';
 
 function Paginate({ data, className, ...props }) {
     return (
