@@ -44,9 +44,9 @@ export default function Index(props) {
                                 <Td>{props.schools.from + index}</Td>
                                 <Td>{school.name}</Td>
                                 <Td>{school.address}</Td>
-                                <Td>
-                                    <NavLink><PencilIcon className='w-5' /></NavLink>
-                                    <NavLink><TrashIcon className='w-5 text-red-400' /></NavLink>
+                                <Td className={'flex'}>
+                                    <Link href={route('school.edit', { 'school': school.id })}><PencilIcon className='w-5' /></Link>
+                                    <Link><TrashIcon className='w-5 text-red-400' /></Link>
                                 </Td>
                             </Tr>
                         ))}

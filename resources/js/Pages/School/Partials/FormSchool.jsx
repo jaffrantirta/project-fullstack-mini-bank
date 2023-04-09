@@ -6,22 +6,21 @@ import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 
-export default function CreateSchool({ className }) {
-    const addressRef = useRef();
-    const nameRef = useRef();
-
-    const { data, setData, errors, post, reset, processing, recentlySuccessful } = useForm({
-        name: '',
-        address: '',
+export default function FormSchool({ className, isUpdate = false, ...props }) {
+    const { data, setData, errors, post, put, reset, processing, recentlySuccessful } = useForm({
+        name: props.school?.name || '',
+        address: props.school?.address || '',
     });
 
     const onSubmit = (e) => {
         e.preventDefault();
-
-        post(route('school.store'), {
+        isUpdate ? put(route('school.update', props.school.id), {
             preserveScroll: true,
-            onSuccess: () => reset(),
-        });
+        }) :
+            post(route('school.store'), {
+                preserveScroll: true,
+                onSuccess: () => reset(),
+            });
     };
 
     return (
@@ -40,7 +39,6 @@ export default function CreateSchool({ className }) {
 
                     <TextInput
                         id="name"
-                        ref={nameRef}
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
                         type="text"
@@ -56,7 +54,6 @@ export default function CreateSchool({ className }) {
                     <TextInput
                         isTextArea={true}
                         id="address"
-                        ref={addressRef}
                         value={data.address}
                         onChange={(e) => setData('address', e.target.value)}
                         className="mt-1 block w-full"

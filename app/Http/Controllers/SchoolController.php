@@ -28,20 +28,18 @@ class SchoolController extends Controller
         $school = School::create($request->validated());
         return back();
     }
-
-
-    public function show(School $school)
+    public function edit(School $school)
     {
-        return response($school);
+        return Inertia::render('School/Edit', [
+            'session' => session()->all(),
+            'school' => $school,
+        ]);
     }
-
-
     public function update(SchoolUpdateRequest $request, School $school)
     {
         $school->update($request->validated());
-        return response($school);
+        return back();
     }
-
     public function destroy(School $school)
     {
         $this->authorize('delete', $school);
