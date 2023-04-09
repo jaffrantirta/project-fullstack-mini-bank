@@ -10,13 +10,24 @@ use App\Models\School;
 use App\Models\User;
 use App\Queries\EmployeeQuery;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
         $this->authorize('viewAny', Employee::class);
-        return response((new EmployeeQuery)->includes()->filterSortPaginate());
+        return Inertia::render('Employee/Index', [
+            'session' => session()->all(),
+            'employees' => Employee::with('user')->latest()->paginate(),
+        ]);
+    }
+    public function create()
+    {
+        return Inertia::render('Employee/Create', [
+            'session' => session()->all(),
+            'schools' => School::orderBy('name')->get(),
+        ]);
     }
 
     public function store(EmployeeStoreRequest $request)
@@ -24,7 +35,7 @@ class EmployeeController extends Controller
         $user = User::create($request->only('email', 'name') + ['password' => $request->nip]);
         $user->employee()->create($request->validated());
         $user->employee->schools()->attach(School::whereIn('id', $request->school_ids)->get());
-        return response($user);
+        return back();
     }
 
     public function storeMany(EmployeeStoreManyRequest $request)
@@ -48,10 +59,14 @@ class EmployeeController extends Controller
     }
 
 
-    public function show(Employee $employee)
+    public function edit(Employee $employee)
     {
         $this->authorize('view', $employee);
-        return response($employee);
+        return Inertia::render('Employee/Edit', [
+            'session' => session()->all(),
+            'employee' => Employee::with('user')->with('schools')->find($employee->id),
+            'schools' => School::orderBy('name')->get()
+        ]);
     }
 
     public function showByNip($nip)
@@ -62,21 +77,20 @@ class EmployeeController extends Controller
     public function update(EmployeeUpdateRequest $request, Employee $employee)
     {
         DB::beginTransaction();
-        if ($request->name) $employee->user()->update($request->only('name'));
+        if ($request->name) $employee->user()->update($request->only('name', 'email'));
         if ($request->school_ids) {
             $employee->schools()->detach();
             $employee->schools()->attach($request->school_ids);
-            // School::whereIn('id', $request->school_ids)->get()
         }
         $employee->update($request->validated());
         DB::commit();
-        return response($employee);
+        return back();
     }
 
     public function destroy(Employee $employee)
     {
         $this->authorize('delete', $employee);
         $employee->delete();
-        return response(['message' => 'deleted']);
+        return back();
     }
 }

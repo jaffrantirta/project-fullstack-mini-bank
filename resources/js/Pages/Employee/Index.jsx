@@ -27,26 +27,27 @@ export default function Index(props) {
     const deleteProcess = (e) => {
         e.preventDefault();
 
-        destroy(route('school.destroy', data.id), {
+        destroy(route('employee.destroy', data.id), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onFinish: () => reset(),
         });
     };
+    console.log(props.employees.data);
     return (
         <Authenticated
             auth={props.auth}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    {confirmingDeletion ? 'Hapus Sekolah' : 'Sekolah'}
+                    Staff Sekolah
                 </h2>
             }
             session={props.session}
         >
-            <Head title='Sekolah' />
+            <Head title='Staff Sekolah' />
 
             <div className='flex justify-center md:justify-end p-10'>
-                <Link href={route('school.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
+                <Link href={route('employee.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
             </div>
 
             <div className='overflow-x-auto p-5 md:p-10'>
@@ -55,21 +56,21 @@ export default function Index(props) {
                         <Tr>
                             <Th>No.</Th>
                             <Th>Nama</Th>
-                            <Th>Alamat</Th>
+                            <Th>Email</Th>
                             <Th>Aksi</Th>
                         </Tr>
                     </thead>
                     <tbody>
-                        {props.schools.data.map((school, index) => (
+                        {props.employees.data.map((employee, index) => (
                             <Tr key={index}>
-                                <Td>{props.schools.from + index}</Td>
-                                <Td>{school.name}</Td>
-                                <Td>{school.address}</Td>
+                                <Td>{props.employees.from + index}</Td>
+                                <Td>{employee.user.name}</Td>
+                                <Td>{employee.user.email}</Td>
                                 <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('school.edit', school.id)}><PencilIcon className='h-5' /></Link>
+                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.edit', employee.id)}><PencilIcon className='h-5' /></Link>
                                     <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
                                         e.preventDefault();
-                                        setData('id', school.id);
+                                        setData('id', employee.id);
                                         setConfirmingDeletion(true);
                                     }}><TrashIcon className='h-5 text-red-400' /></Link>
                                 </Td>
@@ -77,7 +78,7 @@ export default function Index(props) {
                         ))}
                     </tbody>
                 </Table>
-                <Paginate className={'mt-5'} data={props.schools} />
+                <Paginate className={'mt-5'} data={props.employees} />
             </div>
 
             <Modal show={confirmingDeletion} onClose={closeModal}>
