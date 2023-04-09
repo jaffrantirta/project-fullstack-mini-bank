@@ -44,6 +44,6 @@ class SchoolController extends Controller
     {
         $this->authorize('delete', $school);
         $school->delete();
-        return response(['message' => 'deleted']);
+        return back();
     }
 }
