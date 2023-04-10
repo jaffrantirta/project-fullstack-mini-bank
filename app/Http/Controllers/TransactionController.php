@@ -146,7 +146,7 @@ class TransactionController extends Controller
                 ->performedOn($user->transactions()->latest()->first())
                 ->causedBy(auth()->user())
                 ->withProperties($transaction->toArray())
-                ->event('created')
+                ->event('transaction.' . $request->transaction_type)
                 ->log('created');
         });
         return back();
