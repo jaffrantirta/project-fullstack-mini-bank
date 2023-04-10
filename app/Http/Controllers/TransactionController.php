@@ -7,12 +7,17 @@ use App\Http\Requests\HighestReportRequest;
 use App\Http\Requests\TotalReportRequest;
 use App\Http\Requests\TransactionStoreManyRequest;
 use App\Http\Requests\TransactionStoreRequest;
+use App\Models\Account;
 use App\Models\Transaction;
+use App\Models\TransactionAccount;
+use App\Models\TransactionCode;
 use App\Models\User;
 use App\Queries\TransactionQuery as QueriesTransactionQuery;
 use Bavix\Wallet\External\Api\TransactionQuery;
 use Bavix\Wallet\External\Api\TransactionQueryHandler;
 use Bavix\Wallet\Models\Wallet;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
@@ -104,23 +109,47 @@ class TransactionController extends Controller
         return response((new QueriesTransactionQuery)->includes()->filterSortPaginate());
     }
 
-    public function store(TransactionStoreRequest $request, User $user)
+    public function create()
     {
-        if ($request->amount > 0)
-            $user->deposit($request->amount, $this->getTransactionBaseMeta());
-        else if ($request->amount < 0)
-            $user->withdraw(abs($request->amount, $this->getTransactionBaseMeta()));
-        else throw new \Exception('amount cannot be 0');
+        return Inertia::render('Transaction/Create', [
+            'session' => session()->all(),
+            'accounts' => Account::orderBy('code')->get(),
+            'transaction_code' => auth()->user()->id . '-' . now()->timestamp,
+        ]);
+    }
 
-        //logs activity
-        $transaction = $user->transactions()->latest()->first();
-        activity()
-            ->performedOn($user->transactions()->latest()->first())
-            ->causedBy(auth()->user())
-            ->withProperties($transaction->toArray())
-            ->event('created')
-            ->log('created');
-        return response(['message' => 'ok']);
+    public function store(TransactionStoreRequest $request)
+    {
+        $user = User::find($request->user_id);
+        DB::transaction(function () use ($user, $request) {
+            if ($request->transaction_type === 'deposit')
+                $user->deposit($request->amount);
+            else if ($request->transaction_type === 'withdraw')
+                $user->withdraw(abs($request->amount));
+            else throw new \Exception('amount cannot be 0');
+
+            $latest_id = $user->transactions()->latest()->first()->id;
+
+            TransactionAccount::create([
+                'transaction_id' => $latest_id,
+                'account_id' => $request->account_id,
+            ]);
+
+            TransactionCode::create([
+                'transaction_id' => $latest_id,
+                'code' => $request->transaction_code,
+            ]);
+
+            //logs activity
+            $transaction = $user->transactions()->latest()->first();
+            activity()
+                ->performedOn($user->transactions()->latest()->first())
+                ->causedBy(auth()->user())
+                ->withProperties($transaction->toArray())
+                ->event('created')
+                ->log('created');
+        });
+        return back();
     }
 
     public function storeMany(TransactionStoreManyRequest $request)

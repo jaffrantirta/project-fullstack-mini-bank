@@ -4,6 +4,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('school', SchoolController::class);
     Route::resource('employee', EmployeeController::class);
     Route::resource('student', StudentController::class);
+    Route::resource('transaction', TransactionController::class);
+    Route::get('transaction/find/{account_number}', [UserController::class, 'show'])->name('transaction.show.user');
 });
 
 require __DIR__ . '/auth.php';

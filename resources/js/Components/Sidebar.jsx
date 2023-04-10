@@ -1,5 +1,5 @@
 import React from 'react'
-import { BoltIcon, HomeModernIcon, UsersIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, DocumentPlusIcon, HomeModernIcon, UsersIcon } from '@heroicons/react/24/solid'
 import SideLink from './SideLink'
 import ApplicationLogo from './ApplicationLogo'
 
@@ -28,6 +28,14 @@ export default function Sidebar(props) {
                             <SideLink href={route('student.index')} active={route().current('student.index')}>
                                 <UsersIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Siswa</span>
+                            </SideLink>
+                        </>
+                    )}
+                    {props.session.roles && props.session.roles.some(role => role.name === 'super-admin' || role.name === 'student-admin' || role.name === 'school-admin') && (
+                        <>
+                            <SideLink href={route('transaction.create')} active={route().current('transaction.create')}>
+                                <DocumentPlusIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Transaksi</span>
                             </SideLink>
                         </>
                     )}

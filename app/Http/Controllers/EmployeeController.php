@@ -92,6 +92,7 @@ class EmployeeController extends Controller
 
     public function showByNip($nip)
     {
+        $employee = Employee::with('user')->with('schools')->where('nip', $nip)->firstOrFail();
         return response((new EmployeeQuery)->where('nip', $nip)->includes()->firstOrFail());
     }
 

@@ -14,7 +14,7 @@ class TransactionStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()?->can('create', Transaction::class);
+        return $this->user()?->can('create', Transaction::class);
     }
 
     /**
@@ -26,6 +26,9 @@ class TransactionStoreRequest extends FormRequest
     {
         return [
             'amount' => ['required', 'numeric'],
+            'account_id' => ['required', 'exists:accounts,id'],
+            'transaction_type' => ['required', 'in:deposit,withdraw'],
+            'user_id' => ['required', 'exists:users,id'],
         ];
     }
 }
