@@ -5,17 +5,56 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentStoreManyRequest;
 use App\Http\Requests\StudentStoreRequest;
 use App\Http\Requests\StudentUpdateRequest;
+use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\User;
 use App\Queries\StudentQuery;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Student::class);
+
+        $students = Student::with('user')->with('classroom')->latest();
+
+        // check if a search term was entered
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $students->where(function ($query) use ($search) {
+                $query->where('NIS', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%')
+                            ->orWhere('email', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('classroom', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+
+
+        $students = $students->paginate();
+
+        return Inertia::render('Student/Index', [
+            'session' => session()->all(),
+            'students' => $students,
+        ]);
+        $this->authorize('viewAny', Student::class);
         return response((new StudentQuery)->includes()->filterSortPaginateWithAppend());
+    }
+
+    public function create()
+    {
+        $this->authorize('create', Student::class);
+        return Inertia::render('Student/CreateOrUpdate', [
+            'session' => session()->all(),
+            'classrooms' => Classroom::orderBy('name')->with('school')->get(),
+        ]);
     }
 
     public function store(StudentStoreRequest $request)
@@ -24,7 +63,7 @@ class StudentController extends Controller
         $user = User::create($request->only('email', 'name') + ['password' => $request->nis]);
         $user->student()->create($request->only(['nis', 'classroom_id']));
         DB::commit();
-        return response($user);
+        return back();
     }
 
     public function storeMany(StudentStoreManyRequest $request)
@@ -48,10 +87,15 @@ class StudentController extends Controller
     }
 
 
-    public function show(Student $student)
+    public function edit(Student $student)
     {
-        // $this->authorize('view', $student);
-        return response($student);
+        $this->authorize('create', Student::class);
+        return Inertia::render('Student/CreateOrUpdate', [
+            'session' => session()->all(),
+            'isUpdate' => true,
+            'classrooms' => Classroom::orderBy('name')->with('school')->get(),
+            'student' => Student::with('user')->with('classroom')->findOrFail($student->id)
+        ]);
     }
 
     public function showByNis($nis)
@@ -62,15 +106,15 @@ class StudentController extends Controller
 
     public function update(StudentUpdateRequest $request, Student $student)
     {
-        if ($request->name || $request->email) $student->user()->update($request->except('nis', 'classroom_id'));
+        $student->user()->update($request->except('nis', 'classroom_id'));
         $student->update($request->validated());
-        return response($student);
+        return back();
     }
 
     public function destroy(Student $student)
     {
         $this->authorize('delete', $student);
         $student->delete();
-        return response(['message' => 'deleted']);
+        return back();
     }
 }

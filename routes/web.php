@@ -3,6 +3,7 @@
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('school', SchoolController::class);
     Route::resource('employee', EmployeeController::class);
+    Route::resource('student', StudentController::class);
 });
 
 require __DIR__ . '/auth.php';

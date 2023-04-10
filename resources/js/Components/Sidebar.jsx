@@ -25,6 +25,10 @@ export default function Sidebar(props) {
                                 <UsersIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Staff Sekolah</span>
                             </SideLink>
+                            <SideLink href={route('student.index')} active={route().current('student.index')}>
+                                <UsersIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Siswa</span>
+                            </SideLink>
                         </>
                     )}
                 </nav>
