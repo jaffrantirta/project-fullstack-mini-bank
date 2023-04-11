@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('student', StudentController::class);
     Route::resource('transaction', TransactionController::class);
     Route::get('transaction/find/{account_number}', [UserController::class, 'show'])->name('transaction.show.user');
+    Route::get('print/{id}', [PrintController::class, 'index'])->name('print.index');
 });
 
 require __DIR__ . '/auth.php';

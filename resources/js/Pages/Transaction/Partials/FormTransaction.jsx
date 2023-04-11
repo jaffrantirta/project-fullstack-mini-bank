@@ -1,33 +1,31 @@
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import Select from '@/Components/Select';
 
 export default function FormTransaction({ className, ...props }) {
-    const { data, setData, errors, post, put, reset, processing, recentlySuccessful } = useForm({
+    const { data, setData, errors, post, reset, processing, recentlySuccessful } = useForm({
         transaction_type: '',
         amount: '',
         account_id: '',
+        transaction_id: props.transaction_id || '',
         user_id: props.user?.user.id,
         transaction_code: props.transaction_code || '',
+        transaction_date: new Date().toISOString().slice(0, 10),
     });
     const [final_balance, setFinal_balance] = useState(props.balance)
-    console.log(props.user?.user.id, 'transaksi');
-    console.log(props.balance, 'transaksi');
 
     const onSubmit = (e) => {
         e.preventDefault();
         post(route('transaction.store'), {
-            preserveScroll: true,
-            onSuccess: () => {
-                reset();
-            },
-        });
+            onSuccess: ({ props }) => console.log(props.transaction_id, 'response')
+        })
     };
+
 
     return (
         <section className={className}>
@@ -58,6 +56,20 @@ export default function FormTransaction({ className, ...props }) {
                         </Select>
 
                         <InputError message={errors.transaction_type} className="mt-2" />
+                    </div>
+
+                    <div>
+                        <InputLabel htmlFor="transaction_date" value="Tanggal Transaksi" />
+
+                        <TextInput
+                            id="transaction_date"
+                            value={data.transaction_date}
+                            onChange={(e) => setData('transaction_date', e.target.value)}
+                            type="date"
+                            className="mt-1 block w-full"
+                        />
+
+                        <InputError message={errors.transaction_date} className="mt-2" />
                     </div>
 
                     <div>
@@ -121,6 +133,10 @@ export default function FormTransaction({ className, ...props }) {
 
                 <div className="flex items-center gap-4 mt-5">
                     <PrimaryButton disabled={processing}>Simpan</PrimaryButton>
+
+                    {props.transaction_id ? (
+                        <Link href={`/print/${props.transaction_id}`}><PrimaryButton>Print</PrimaryButton></Link>
+                    ) : <></>}
 
                     <Transition
                         show={recentlySuccessful}

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -11,7 +11,6 @@ export default function FormUser({ className, ...props }) {
     const { data, setData, errors, post, put, get, reset, processing, recentlySuccessful } = useForm({
         user_account_number: props.user?.NIP || props.user?.NIS || '',
         transaction_code: props.transaction_code || '',
-        transaction_date: new Date().toISOString().slice(0, 10),
         transaction_type: '',
         name: props.user?.user.name || '',
         email: props.user?.user.email || '',
@@ -24,6 +23,11 @@ export default function FormUser({ className, ...props }) {
         e.preventDefault();
         get(route('transaction.show.user', data.user_account_number))
     };
+
+    useEffect(() => {
+        if (props.reset) reset();
+    }, [])
+
 
     return (
         <section className={className}>
@@ -50,21 +54,6 @@ export default function FormUser({ className, ...props }) {
                         />
 
                         <InputError message={errors.transaction_code} className="mt-2" />
-                    </div>
-
-                    <div>
-                        <InputLabel htmlFor="transaction_date" value="Tanggal Transaksi" />
-
-                        <TextInput
-                            id="transaction_date"
-                            value={data.transaction_date}
-                            onChange={(e) => setData('transaction_date', e.target.value)}
-                            type="date"
-                            className="mt-1 block w-full"
-                            disabled
-                        />
-
-                        <InputError message={errors.transaction_date} className="mt-2" />
                     </div>
 
                     <div>

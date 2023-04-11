@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.0.17",
-        "he": "^1.2.0"
+        "he": "^1.2.0",
+        "moment": "^2.29.4"
     }
 }

@@ -29,6 +29,7 @@ class TransactionStoreRequest extends FormRequest
             'account_id' => ['required', 'exists:accounts,id'],
             'transaction_type' => ['required', 'in:deposit,withdraw'],
             'user_id' => ['required', 'exists:users,id'],
+            'transaction_date' => ['date'],
         ];
     }
 }

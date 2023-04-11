@@ -9,10 +9,7 @@ use App\Http\Requests\TransactionStoreManyRequest;
 use App\Http\Requests\TransactionStoreRequest;
 use App\Models\Account;
 use App\Models\Transaction;
-use App\Models\TransactionAccount;
-use App\Models\TransactionCode;
 use App\Models\User;
-use App\Queries\TransactionQuery as QueriesTransactionQuery;
 use Bavix\Wallet\External\Api\TransactionQuery;
 use Bavix\Wallet\External\Api\TransactionQueryHandler;
 use Bavix\Wallet\Models\Wallet;
@@ -21,11 +18,13 @@ use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
-    protected function getTransactionBaseMeta(): array
+    protected function getTransactionBaseMeta($request): array
     {
         return [
-            'employee_id' => auth()->user()->employee_id,
-            'user_id' => auth()->id(),
+            'collected_by' => auth()->user()->name,
+            'date' => $request->transaction_date ?? now(),
+            'code' => $request->transaction_code,
+            'account_id' => $request->account_id,
         ];
     }
 
@@ -105,8 +104,9 @@ class TransactionController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', Transaction::class);
-        return response((new QueriesTransactionQuery)->includes()->filterSortPaginate());
+        // $this->authorize('viewAny', Transaction::class);
+        // return response((new QueriesTransactionQuery)->includes()->filterSortPaginate());
+        return Transaction::all();
     }
 
     public function create()
@@ -121,35 +121,32 @@ class TransactionController extends Controller
     public function store(TransactionStoreRequest $request)
     {
         $user = User::find($request->user_id);
-        DB::transaction(function () use ($user, $request) {
-            if ($request->transaction_type === 'deposit')
-                $user->deposit($request->amount);
-            else if ($request->transaction_type === 'withdraw')
-                $user->withdraw(abs($request->amount));
-            else throw new \Exception('amount cannot be 0');
 
-            $latest_id = $user->transactions()->latest()->first()->id;
+        DB::beginTransaction();
+        if ($request->transaction_type === 'deposit')
+            $user->deposit($request->amount, $this->getTransactionBaseMeta($request));
+        else if ($request->transaction_type === 'withdraw')
+            $user->withdraw(abs($request->amount), $this->getTransactionBaseMeta($request));
+        else throw new \Exception('amount cannot be 0');
 
-            TransactionAccount::create([
-                'transaction_id' => $latest_id,
-                'account_id' => $request->account_id,
-            ]);
+        $latest_id = $user->transactions()->latest()->first()->id;
 
-            TransactionCode::create([
-                'transaction_id' => $latest_id,
-                'code' => $request->transaction_code,
-            ]);
+        //logs activity
+        $transaction = $user->transactions()->latest()->first();
+        activity()
+            ->performedOn($user->transactions()->latest()->first())
+            ->causedBy(auth()->user())
+            ->withProperties($transaction->toArray())
+            ->event('transaction.' . $request->transaction_type)
+            ->log('created');
+        DB::commit();
 
-            //logs activity
-            $transaction = $user->transactions()->latest()->first();
-            activity()
-                ->performedOn($user->transactions()->latest()->first())
-                ->causedBy(auth()->user())
-                ->withProperties($transaction->toArray())
-                ->event('transaction.' . $request->transaction_type)
-                ->log('created');
-        });
-        return back();
+        return Inertia::render('Transaction/Create', [
+            'session' => session()->all(),
+            'transaction_id' => $latest_id,
+            'accounts' => Account::orderBy('code')->get(),
+            'transaction_code' => auth()->user()->id . '-' . now()->timestamp,
+        ]);
     }
 
     public function storeMany(TransactionStoreManyRequest $request)
@@ -171,7 +168,7 @@ class TransactionController extends Controller
         }
         app(TransactionQueryHandler::class)->apply(
             array_map(
-                static fn ($transaction) => TransactionQuery::createDeposit($transaction['wallet'], $transaction['amount'], $this->getTransactionBaseMeta()),
+                static fn ($transaction) => TransactionQuery::createDeposit($transaction['wallet'], $transaction['amount'], $this->getTransactionBaseMeta($request)),
                 $transactions
             )
         );

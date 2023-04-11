@@ -20,7 +20,7 @@ class UserController extends Controller
             'session' => session()->all(),
             'user' => $user,
             'isEmpty' => $user ? false : true,
-            'balance' => $user->user->balance,
+            'balance' => $user ? $user->user->balance : '0',
             'accounts' => Account::orderBy('code')->get(),
             'transaction_code' => auth()->user()->id . '-' . now()->timestamp,
         ]);
