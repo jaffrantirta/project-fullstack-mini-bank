@@ -53,7 +53,7 @@ export default function StudentAdmin(props) {
                                 <Td>{props.student_admins.from + index}</Td>
                                 <Td>{user.employee?.NIP || user.student?.NIS}</Td>
                                 <Td>{user.name}</Td>
-                                <Td>{`${user.classroom?.name} - ${user.classroom?.school.name}` || user.schools?.map((school) => {
+                                <Td>{user.student !== null ? `${user.student?.classroom.class} ${user.student?.classroom.name} - ${user.student?.classroom.school.name}` : user.schools?.map((school) => {
                                     return (
                                         <span key={school.id}>{school.name}</span>
                                     )
