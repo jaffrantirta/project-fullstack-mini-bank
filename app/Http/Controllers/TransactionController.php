@@ -13,6 +13,7 @@ use App\Models\User;
 use Bavix\Wallet\External\Api\TransactionQuery;
 use Bavix\Wallet\External\Api\TransactionQueryHandler;
 use Bavix\Wallet\Models\Wallet;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -102,11 +103,27 @@ class TransactionController extends Controller
         );
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        // $this->authorize('viewAny', Transaction::class);
-        // return response((new QueriesTransactionQuery)->includes()->filterSortPaginate());
-        return Transaction::all();
+        $this->authorize('viewAny', Transaction::class);
+        $transactions = Transaction::latest();
+
+        // check if a search term was entered
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $transactions->where(function ($query) use ($search) {
+                $query->where('meta', 'like', '%' . $search . '%');
+            });
+        }
+
+
+
+        $transactions = $transactions->paginate();
+
+        return Inertia::render('Transaction/Index', [
+            'session' => session()->all(),
+            'transactions' => $transactions,
+        ]);
     }
 
     public function create()

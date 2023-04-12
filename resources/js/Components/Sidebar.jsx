@@ -1,5 +1,5 @@
 import React from 'react'
-import { BoltIcon, DocumentPlusIcon, HomeModernIcon, UsersIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, DocumentDuplicateIcon, DocumentPlusIcon, HomeModernIcon, UsersIcon } from '@heroicons/react/24/solid'
 import SideLink from './SideLink'
 import ApplicationLogo from './ApplicationLogo'
 
@@ -35,6 +35,10 @@ export default function Sidebar(props) {
                         <>
                             <SideLink href={route('transaction.create')} active={route().current('transaction.create')}>
                                 <DocumentPlusIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Buat Transaksi</span>
+                            </SideLink>
+                            <SideLink href={route('transaction.index')} active={route().current('transaction.index')}>
+                                <DocumentDuplicateIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Transaksi</span>
                             </SideLink>
                         </>
