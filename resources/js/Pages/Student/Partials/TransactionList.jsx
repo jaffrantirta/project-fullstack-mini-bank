@@ -38,7 +38,7 @@ export default function TransactionList(props) {
                         </Tr>
                     )) : (
                         <Tr>
-                            <Td colSpan={5} className={'text-center'}>
+                            <Td colSpan={6} className={'text-center'}>
                                 Tidak ada data.
                             </Td>
                         </Tr>

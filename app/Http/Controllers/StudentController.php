@@ -105,9 +105,12 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
+        $user = User::find($student->user_id);
         return Inertia::render('Student/Show', [
             'session' => session()->all(),
-            'student' => Student::with('user', 'classroom.school')->findOrFail($student->id)
+            'student' => Student::with('user', 'classroom.school')->findOrFail($student->id),
+            'transactions' => $user->transactions()->latest()->paginate(),
+            'balance' => $user->balance,
         ]);
     }
 
