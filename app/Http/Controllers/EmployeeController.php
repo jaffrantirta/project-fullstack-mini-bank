@@ -96,6 +96,18 @@ class EmployeeController extends Controller
         return response((new EmployeeQuery)->where('nip', $nip)->includes()->firstOrFail());
     }
 
+    public function show(Employee $employee)
+    {
+        $user = User::find($employee->user_id);
+        return Inertia::render('Employee/Show', [
+            'session' => session()->all(),
+            'employee' => Employee::with('user', 'schools')->findOrFail($employee->id),
+            'transactions' => $user->transactions()->latest()->paginate(),
+            'balance' => number_format($user->balance),
+        ]);
+    }
+
+
     public function update(EmployeeUpdateRequest $request, Employee $employee)
     {
         DB::beginTransaction();

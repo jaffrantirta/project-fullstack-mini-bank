@@ -110,7 +110,7 @@ class StudentController extends Controller
             'session' => session()->all(),
             'student' => Student::with('user', 'classroom.school')->findOrFail($student->id),
             'transactions' => $user->transactions()->latest()->paginate(),
-            'balance' => $user->balance,
+            'balance' => number_format($user->balance),
         ]);
     }
 

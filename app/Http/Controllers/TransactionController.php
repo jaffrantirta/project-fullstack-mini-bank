@@ -117,13 +117,13 @@ class TransactionController extends Controller
         $this->authorize('viewAny', Transaction::class);
         $transactions = Transaction::latest();
 
-        // check if a search term was entered
         if ($request->has('search')) {
             $search = $request->input('search');
             $transactions->where(function ($query) use ($search) {
-                $query->where('meta', 'like', '%' . $search . '%');
+                $query->whereRaw("JSON_CONTAINS(meta, '\"$search\"', '$.code')");
             });
         }
+
 
 
 

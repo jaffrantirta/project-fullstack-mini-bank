@@ -10,7 +10,7 @@ import TextInput from '@/Components/TextInput';
 import Th from '@/Components/Th';
 import Tr from '@/Components/Tr';
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { Head, Link, useForm } from '@inertiajs/react'
 import React, { useState } from 'react'
 
@@ -86,6 +86,7 @@ export default function Index(props) {
                     <thead>
                         <Tr>
                             <Th>No.</Th>
+                            <Th>NIP/Nomor Identitas</Th>
                             <Th>Nama</Th>
                             <Th>Email</Th>
                             <Th>Aksi</Th>
@@ -95,15 +96,21 @@ export default function Index(props) {
                         {props.employees.data.length > 0 ? props.employees.data.map((employee, index) => (
                             <Tr key={index}>
                                 <Td>{props.employees.from + index}</Td>
+                                <Td>{employee.NIP}</Td>
                                 <Td>{employee.user.name}</Td>
                                 <Td>{employee.user.email}</Td>
                                 <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.edit', employee.id)}><PencilIcon className='h-5' /></Link>
+                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.edit', employee.id)}>
+                                        <PencilIcon className='h-5' />
+                                    </Link>
                                     <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
                                         e.preventDefault();
                                         setData('id', employee.id);
                                         setConfirmingDeletion(true);
                                     }}><TrashIcon className='h-5 text-red-400' /></Link>
+                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.show', employee.id)}>
+                                        <ArrowRightIcon className='h-5' />
+                                    </Link>
                                 </Td>
                             </Tr>
                         )) : (

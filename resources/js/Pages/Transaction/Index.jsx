@@ -16,6 +16,8 @@ export default function Index(props) {
         search: '',
     });
 
+    console.log(props);
+
     const onSearch = (e) => {
         e.preventDefault();
 
@@ -51,7 +53,7 @@ export default function Index(props) {
 
             <div className='grid grid-cols-1 md:grid-cols-2 p-10'>
                 <form onSubmit={onSearch} className="flex gap-3">
-                    <TextInput id="search" type="search" placeholder="Pencarian..." onChange={(e) => setData('search', e.target.value)} />
+                    <TextInput id="search" type="search" placeholder="Cari Kode Ref ..." onChange={(e) => setData('search', e.target.value)} />
                     <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
                 </form>
             </div>
@@ -76,8 +78,8 @@ export default function Index(props) {
                                 <Td>{props.transactions.from + index}</Td>
                                 <Td>{transaction.meta.code}</Td>
                                 <Td>{moment(transaction.meta.date).format('LL')}</Td>
-                                <Td className={'text-right'}>Rp.{transaction.amount}</Td>
-                                <Td>{transaction.type == 'deposit' ? 'debit' : 'kredit'}</Td>
+                                <Td className={'text-right'}>Rp.{transaction.amount_number_format}</Td>
+                                <Td>{transaction.type_att}</Td>
                                 <Td className={'flex gap-3'}>
                                     <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('transaction.show', transaction.id)}>
                                         <ArrowRightIcon className='h-5' />
