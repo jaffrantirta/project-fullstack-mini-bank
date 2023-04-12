@@ -1,5 +1,5 @@
 import React from 'react'
-import { BoltIcon, DocumentDuplicateIcon, DocumentPlusIcon, HomeModernIcon, UsersIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, DocumentDuplicateIcon, DocumentPlusIcon, FingerPrintIcon, HomeModernIcon, UsersIcon } from '@heroicons/react/24/solid'
 import SideLink from './SideLink'
 import ApplicationLogo from './ApplicationLogo'
 
@@ -28,6 +28,10 @@ export default function Sidebar(props) {
                             <SideLink href={route('student.index')} active={route().current('student.index')}>
                                 <UsersIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Siswa</span>
+                            </SideLink>
+                            <SideLink href={route('role.index')} active={route().current('role.index')}>
+                                <FingerPrintIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Hak akses</span>
                             </SideLink>
                         </>
                     )}

@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AssignRoleRequest;
 use App\Http\Requests\RevokeRoleRequest;
 use App\Models\User;
-use App\Queries\RoleQuery;
+use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        return response(
-            (new RoleQuery)->includes()->filterSortPaginateWithAppend()
-        );
+        return Inertia::render('Role/Index', [
+            'school_admins' => User::role('school-admin')->with('student.classroom.school', 'employee.schools')->paginate(),
+            'student_admins' => User::role('student-admin')->with('student.classroom.school', 'employee.schools')->paginate(),
+            'session' => session()->all()
+        ]);
     }
 
     public function assign(AssignRoleRequest $request)

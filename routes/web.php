@@ -3,6 +3,7 @@
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransactionController;
@@ -48,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('transaction', TransactionController::class);
     Route::get('transaction/find/{account_number}', [UserController::class, 'show'])->name('transaction.show.user');
     Route::get('print/{id}', [PrintController::class, 'index'])->name('print.index');
+    Route::resource('role', RoleController::class);
 });
 
 require __DIR__ . '/auth.php';

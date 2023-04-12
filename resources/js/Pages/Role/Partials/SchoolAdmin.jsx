@@ -2,24 +2,23 @@ import DangerButton from '@/Components/DangerButton';
 import InputError from '@/Components/InputError';
 import Modal from '@/Components/Modal';
 import Paginate from '@/Components/Paginate';
-import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import Table from '@/Components/Table';
 import Td from '@/Components/Td';
-import TextInput from '@/Components/TextInput';
 import Th from '@/Components/Th';
 import Tr from '@/Components/Tr';
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
-import { Head, Link, useForm } from '@inertiajs/react'
+import { TrashIcon } from '@heroicons/react/24/solid';
+import { Link, useForm } from '@inertiajs/react'
 import React, { useState } from 'react'
 
-export default function Index(props) {
+export default function SchoolAdmin(props) {
     const [confirmingDeletion, setConfirmingDeletion] = useState(false);
     const { data, setData, get, delete: destroy, processing, reset, hasErrors } = useForm({
         id: '',
         search: '',
     });
+
+    console.log(props);
 
     const closeModal = () => {
         setConfirmingDeletion(false);
@@ -35,82 +34,36 @@ export default function Index(props) {
             onFinish: () => reset(),
         });
     };
-    const onSearch = (e) => {
-        e.preventDefault();
-
-        const search = data.search.trim();
-
-        if (search) {
-            get(route('employee.index', { q: search }), {
-                preserveScroll: true,
-                onSuccess: (data) => {
-                    setData(data);
-                },
-            });
-        } else {
-            get(route('employee.index'), {
-                preserveScroll: true,
-                onSuccess: (data) => {
-                    setData(data);
-                },
-            });
-        }
-    }
-
     return (
-        <Authenticated
-            auth={props.auth}
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Staff Sekolah
-                </h2>
-            }
-            session={props.session}
-        >
-            <Head title='Staff Sekolah' />
-
-            <div className='grid grid-cols-1 md:grid-cols-2 p-10'>
-                <form onSubmit={onSearch} className="flex gap-3">
-                    <TextInput id="search" type="search" placeholder="Pencarian..." onChange={(e) => setData('search', e.target.value)} />
-                    <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
-                </form>
-                <div className='flex justify-end'>
-                    <Link href={route('employee.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
-                </div>
-            </div>
-
-
-
+        <div>
+            <h2 className='px-10 text-xl font-bold'>Admin Sekolah</h2>
             <div className='overflow-x-auto p-5 md:p-10'>
                 <Table>
                     <thead>
                         <Tr>
                             <Th>No.</Th>
-                            <Th>NIP/Nomor Identitas</Th>
                             <Th>Nama</Th>
-                            <Th>Email</Th>
+                            <Th>Kelas/Sekolah</Th>
                             <Th>Aksi</Th>
                         </Tr>
                     </thead>
                     <tbody>
-                        {props.employees.data.length > 0 ? props.employees.data.map((employee, index) => (
+                        {props.school_admins.data.length > 0 ? props.school_admins.data.map((user, index) => (
                             <Tr key={index}>
-                                <Td>{props.employees.from + index}</Td>
-                                <Td>{employee.NIP}</Td>
-                                <Td>{employee.user.name}</Td>
-                                <Td>{employee.user.email}</Td>
+                                <Td>{props.school_admins.from + index}</Td>
+                                <Td>{user.employee?.NIP || user.student?.NIS}</Td>
+                                <Td>{user.name}</Td>
+                                <Td>{`${user.classroom?.name} - ${user.classroom?.school.name}` || user.schools?.map((school) => {
+                                    return (
+                                        <span key={school.id}>{school.name}</span>
+                                    )
+                                })}</Td>
                                 <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.edit', employee.id)}>
-                                        <PencilIcon className='h-5' />
-                                    </Link>
                                     <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
                                         e.preventDefault();
-                                        setData('id', employee.id);
+                                        setData('id', role.id);
                                         setConfirmingDeletion(true);
                                     }}><TrashIcon className='h-5 text-red-400' /></Link>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.show', employee.id)}>
-                                        <ArrowRightIcon className='h-5' />
-                                    </Link>
                                 </Td>
                             </Tr>
                         )) : (
@@ -123,7 +76,7 @@ export default function Index(props) {
                     </tbody>
 
                 </Table>
-                <Paginate className={'mt-5'} data={props.employees} />
+                <Paginate className={'mt-5'} data={props.school_admins} />
             </div>
 
             <Modal show={confirmingDeletion} onClose={closeModal}>
@@ -148,6 +101,6 @@ export default function Index(props) {
                     </div>
                 </form>
             </Modal>
-        </Authenticated>
+        </div>
     )
 }
