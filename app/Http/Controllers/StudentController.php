@@ -103,6 +103,14 @@ class StudentController extends Controller
         return response((new StudentQuery)->where('nis', $nis)->includes()->firstOrFail());
     }
 
+    public function show(Student $student)
+    {
+        return Inertia::render('Student/Show', [
+            'session' => session()->all(),
+            'student' => Student::with('user', 'classroom.school')->findOrFail($student->id)
+        ]);
+    }
+
 
     public function update(StudentUpdateRequest $request, Student $student)
     {

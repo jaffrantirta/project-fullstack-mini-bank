@@ -10,7 +10,7 @@ import TextInput from '@/Components/TextInput';
 import Th from '@/Components/Th';
 import Tr from '@/Components/Tr';
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { Head, Link, useForm } from '@inertiajs/react'
 import React, { useState } from 'react'
 
@@ -99,12 +99,17 @@ export default function Index(props) {
                                 <Td>{student.user.name}</Td>
                                 <Td>{student.user.email}</Td>
                                 <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('student.edit', student.id)}><PencilIcon className='h-5' /></Link>
+                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('student.edit', student.id)}>
+                                        <PencilIcon className='h-5' />
+                                    </Link>
                                     <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
                                         e.preventDefault();
                                         setData('id', student.id);
                                         setConfirmingDeletion(true);
                                     }}><TrashIcon className='h-5 text-red-400' /></Link>
+                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('student.show', student.id)}>
+                                        <ArrowRightIcon className='h-5' />
+                                    </Link>
                                 </Td>
                             </Tr>
                         )) : (
