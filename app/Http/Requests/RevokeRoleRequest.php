@@ -14,7 +14,7 @@ class RevokeRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()?->can('revokeRole', Role::findOrFail($this->role_id));
+        return $this->user()?->can('revokeRole', Role::findByName($this->role_name));
     }
 
     /**
@@ -25,8 +25,8 @@ class RevokeRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'role_id' => ['exists:roles,id', 'required'],
-            'user_id' => ['exists:users,id', 'required'],
+            'role_name' => ['required'],
+            'user_id' => ['required'],
         ];
     }
 }

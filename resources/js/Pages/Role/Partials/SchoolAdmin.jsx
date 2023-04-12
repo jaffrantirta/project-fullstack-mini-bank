@@ -16,6 +16,8 @@ export default function SchoolAdmin(props) {
     const { data, setData, get, delete: destroy, processing, reset, hasErrors } = useForm({
         id: '',
         search: '',
+        user_id: '',
+        role_name: 'school-admin'
     });
 
     console.log(props);
@@ -28,7 +30,7 @@ export default function SchoolAdmin(props) {
     const deleteProcess = (e) => {
         e.preventDefault();
 
-        destroy(route('employee.destroy', data.id), {
+        destroy(route('role.destroy', data.user_id), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onFinish: () => reset(),
@@ -62,7 +64,7 @@ export default function SchoolAdmin(props) {
                                 <Td className={'flex gap-3'}>
                                     <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
                                         e.preventDefault();
-                                        setData('id', role.id);
+                                        setData('user_id', user.id);
                                         setConfirmingDeletion(true);
                                     }}><TrashIcon className='h-5 text-red-400' /></Link>
                                 </Td>
@@ -87,7 +89,7 @@ export default function SchoolAdmin(props) {
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Ketika dihapus, semua data sekolah ini akan dihapus secara permanen.
+                        Ketika dihapus, user tidak bisa mendapatkan akses ke admin dan perlu ditambahkan kembali.
                     </p>
 
                     {hasErrors && <InputError message={'Oops! Sepertinya ada kesalahan'} />}

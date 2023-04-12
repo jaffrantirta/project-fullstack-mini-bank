@@ -29,7 +29,7 @@ class RoleController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(AssignRoleRequest $request)
     {
         $user = Employee::where('NIP', $request->number_id)->first();
         if (!$user) $user = Student::where('NIS', $request->number_id)->first();
@@ -42,15 +42,10 @@ class RoleController extends Controller
         return back();
     }
 
-    public function assign(AssignRoleRequest $request)
+    public function destroy(RevokeRoleRequest $request)
     {
-        User::find($request->user_id)->assignRole(Role::find($request->role_id));
-        return response(['message' => 'ok']);
-    }
-
-    public function revoke(RevokeRoleRequest $request)
-    {
-        User::find($request->user_id)->removeRole(Role::find($request->role_id));
-        return response(['message' => 'ok']);
+        $user = User::find($request->user_id);
+        $user->removeRole($request->role_name);
+        return back();
     }
 }

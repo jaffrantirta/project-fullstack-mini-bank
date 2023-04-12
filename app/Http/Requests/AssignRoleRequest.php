@@ -15,7 +15,7 @@ class AssignRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()?->can('assign-role', Role::findOrFail($this->role_id));
+        return $this->user()?->can('assign-role', Role::findByName($this->role_name));
     }
 
     /**
@@ -26,17 +26,8 @@ class AssignRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'role_name' => ['exists:roles,name', 'required'],
-            'number_id' => [
-                function ($attribute, $value, $fail) {
-                    $employee = DB::table('employees')->where('NIP', $value)->first();
-                    $student = DB::table('students')->where('NIS', $value)->first();
-                    if (!$employee && !$student) {
-                        $fail("$attribute is invalid.");
-                    }
-                },
-                'required'
-            ],
+            'role_name' => ['required'],
+            'number_id' => ['required'],
         ];
     }
 }
