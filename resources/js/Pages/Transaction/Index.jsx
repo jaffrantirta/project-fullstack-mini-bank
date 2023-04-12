@@ -6,13 +6,13 @@ import TextInput from '@/Components/TextInput';
 import Th from '@/Components/Th';
 import Tr from '@/Components/Tr';
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { MagnifyingGlassIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { Head, Link, useForm } from '@inertiajs/react'
 import moment from 'moment';
 import React from 'react'
 
 export default function Index(props) {
-    const { data, setData, get, delete: destroy, processing, reset, hasErrors } = useForm({
+    const { data, setData, get } = useForm({
         search: '',
     });
 
@@ -79,7 +79,9 @@ export default function Index(props) {
                                 <Td className={'text-right'}>Rp.{transaction.amount}</Td>
                                 <Td>{transaction.type == 'deposit' ? 'debit' : 'kredit'}</Td>
                                 <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('transaction.edit', transaction.id)}><PencilIcon className='h-5' /></Link>
+                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('transaction.show', transaction.id)}>
+                                        <ArrowRightIcon className='h-5' />
+                                    </Link>
                                 </Td>
                             </Tr>
                         )) : (
