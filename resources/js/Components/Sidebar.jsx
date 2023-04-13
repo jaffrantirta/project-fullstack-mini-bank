@@ -25,16 +25,23 @@ export default function Sidebar(props) {
                                 <UsersIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Staff Sekolah</span>
                             </SideLink>
-                            <SideLink href={route('student.index')} active={route().current('student.index')}>
-                                <UsersIcon className='h-6 mr-3' />
-                                <span className="text-gray-600">Siswa</span>
-                            </SideLink>
                             <SideLink href={route('role.index')} active={route().current('role.index')}>
                                 <FingerPrintIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Hak akses</span>
                             </SideLink>
                         </>
                     )}
+
+                    {props.session.roles && props.session.roles.some(role => role.name === 'super-admin' || role.name === 'super-admin' || role.name === 'school-admin') && (
+                        <>
+                            <SideLink href={route('student.index')} active={route().current('student.index')}>
+                                <UsersIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Siswa</span>
+                            </SideLink>
+                        </>
+                    )}
+
+
                     {props.session.roles && props.session.roles.some(role => role.name === 'super-admin' || role.name === 'student-admin' || role.name === 'school-admin') && (
                         <>
                             <SideLink href={route('transaction.create')} active={route().current('transaction.create')}>

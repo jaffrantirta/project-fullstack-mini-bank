@@ -56,9 +56,9 @@ export default function SchoolAdmin(props) {
                                 <Td>{props.school_admins.from + index}</Td>
                                 <Td>{user.employee?.NIP || user.student?.NIS}</Td>
                                 <Td>{user.name}</Td>
-                                <Td>{user.student !== null ? `${user.student?.classroom.class} ${user.student?.classroom.name} - ${user.student?.classroom.school.name}` : user.schools?.map((school) => {
+                                <Td>{user.student !== null ? `${user.student?.classroom.class} ${user.student?.classroom.name} - ${user.student?.classroom.school.name}` : user.employee?.schools?.map((school, index) => {
                                     return (
-                                        <span key={school.id}>{school.name}</span>
+                                        <p key={school.id}>{index + 1}. {school.name}</p>
                                     )
                                 })}</Td>
                                 <Td className={'flex gap-3'}>

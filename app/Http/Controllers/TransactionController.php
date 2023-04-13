@@ -105,7 +105,7 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction)
     {
-        $this->authorize('view', $transaction);
+        $this->authorize('viewAny', $transaction);
         return Inertia::render('Transaction/Show', [
             'session' => session()->all(),
             'transaction' => $transaction,

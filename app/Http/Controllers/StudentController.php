@@ -6,10 +6,12 @@ use App\Http\Requests\StudentStoreManyRequest;
 use App\Http\Requests\StudentStoreRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Models\Classroom;
+use App\Models\School;
 use App\Models\Student;
 use App\Models\User;
 use App\Queries\StudentQuery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -50,7 +52,6 @@ class StudentController extends Controller
 
     public function create()
     {
-        $this->authorize('create', Student::class);
         return Inertia::render('Student/CreateOrUpdate', [
             'session' => session()->all(),
             'classrooms' => Classroom::orderBy('name')->with('school')->get(),
