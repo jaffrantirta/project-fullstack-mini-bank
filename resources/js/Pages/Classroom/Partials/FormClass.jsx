@@ -7,21 +7,21 @@ import { useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import Select from '@/Components/Select';
 
-export default function FormStudent({ className, ...props }) {
+export default function FormClass({ className, ...props }) {
     const { data, setData, errors, post, put, reset, processing, recentlySuccessful } = useForm({
-        name: props.student?.user.name || '',
-        nis: props.student?.NIS || '',
-        email: props.student?.user.email || '',
-        classroom_id: props.student?.classroom_id || '',
+        name: props.classroom?.name || '',
+        class: props.classroom?.class || '',
+        school_id: props.classroom?.school_id || '',
+        year: props.classroom?.year || '',
     });
     console.log(props);
 
     const onSubmit = (e) => {
         e.preventDefault();
         props.isUpdate ?
-            put(route('student.update', props.student.id))
+            put(route('classroom.update', props.classroom.id))
             :
-            post(route('student.store'), {
+            post(route('classroom.store'), {
                 preserveScroll: true,
                 onSuccess: () => reset(),
             });
@@ -30,10 +30,10 @@ export default function FormStudent({ className, ...props }) {
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Siswa Sekolah</h2>
+                <h2 className="text-lg font-medium text-gray-900">Kelas</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Masukan data siswa sekolah
+                    Masukan data kelas
                 </p>
             </header>
 
@@ -53,52 +53,52 @@ export default function FormStudent({ className, ...props }) {
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="nis" value="Nomor Identitas" />
+                    <InputLabel htmlFor="class" value="Kelas (masukan 'alumni' jika telas lulus" />
 
                     <TextInput
-                        id="nis"
-                        value={data.nis}
-                        onChange={(e) => setData('nis', e.target.value)}
+                        id="class"
+                        value={data.class}
+                        onChange={(e) => setData('class', e.target.value)}
                         type="text"
                         className="mt-1 block w-full"
                     />
 
-                    <InputError message={errors.nis} className="mt-2" />
+                    <InputError message={errors.class} className="mt-2" />
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="year" value="Tahun" />
 
                     <TextInput
-                        id="email"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        id="year"
+                        value={data.year}
+                        onChange={(e) => setData('year', e.target.value)}
                         type="text"
                         className="mt-1 block w-full"
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    <InputError message={errors.year} className="mt-2" />
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="classroom_id" value="Kalas" />
+                    <InputLabel htmlFor="school_id" value="Sekolah" />
 
                     <Select
-                        id="classroom_id"
-                        name="classroom_id"
+                        id="school_id"
+                        name="school_id"
                         className="mt-1 block w-full"
-                        value={data.classroom_id}
-                        onChange={(e) => setData('classroom_id', e.target.value)}
+                        value={data.school_id}
+                        onChange={(e) => setData('school_id', e.target.value)}
                         required
                     >
-                        <option value="">Pilih kelas</option>
-                        {props.classrooms.map((classroom) => (
-                            <option key={classroom.id} value={classroom.id}>{classroom.class} {classroom.name} - {classroom.school.name}</option>
+                        <option value="">Pilih sekolah</option>
+                        {props.schools.map((school) => (
+                            <option key={school.id} value={school.id}>{school.name}</option>
                         ))}
                     </Select>
 
 
-                    <InputError className="mt-2" message={errors.classroom_id} />
+                    <InputError className="mt-2" message={errors.school_id} />
                 </div>
 
 

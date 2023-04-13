@@ -6,21 +6,48 @@ use App\Http\Requests\ClassroomStoreManyRequest;
 use App\Http\Requests\ClassroomStoreRequest;
 use App\Http\Requests\ClassroomUpdateRequest;
 use App\Models\Classroom;
+use App\Models\School;
 use App\Queries\ClassroomQuery;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ClassroomController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Classroom::class);
-        return response((new ClassroomQuery)->includes()->filterSortPaginateWithAppend());
+
+        $classrooms = Classroom::with('school')->latest();
+
+        // check if a search term was entered
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $classrooms->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('class', 'like', $search);
+            });
+        }
+
+        $classrooms = $classrooms->paginate();
+
+        return Inertia::render('Classroom/Index', [
+            'session' => session()->all(),
+            'classrooms' => $classrooms,
+        ]);
     }
 
+    public function create()
+    {
+        return Inertia::render('Classroom/CreateOrUpdate', [
+            'session' => session()->all(),
+            'schools' => School::orderBy('name')->get(),
+        ]);
+    }
 
     public function store(ClassroomStoreRequest $request)
     {
         $classroom = Classroom::create($request->validated());
-        return response($classroom);
+        return back();
     }
 
     public function storeMany(ClassroomStoreManyRequest $request)
@@ -30,10 +57,13 @@ class ClassroomController extends Controller
     }
 
 
-    public function show(Classroom $classroom)
+    public function edit(Classroom $classroom)
     {
-        $this->authorize('view', $classroom);
-        return response($classroom);
+        return Inertia::render('Classroom/CreateOrUpdate', [
+            'session' => session()->all(),
+            'schools' => School::orderBy('name')->get(),
+            'classroom' => $classroom->load('school'),
+        ]);
     }
 
 
@@ -46,7 +76,9 @@ class ClassroomController extends Controller
     public function destroy(Classroom $classroom)
     {
         $this->authorize('delete', $classroom);
+        if ($classroom->students->count() > 0)
+            return back()->withErrors(['message' => 'Cannot delete classroom with students.']);
         $classroom->delete();
-        return response(['message' => 'deleted']);
+        return back();
     }
 }

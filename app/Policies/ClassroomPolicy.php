@@ -17,21 +17,21 @@ class ClassroomPolicy
 
     public function create(User $user, $school_id)
     {
-        return $user->can('create-classroom') && $user->employee->school->id == $school_id;
+        return $user->can('create-classroom');
     }
 
     public function createMany(User $user, $school_id)
     {
-        return $user->can('create-many-classroom') && $user->employee->school->id == $school_id;
+        return $user->can('create-many-classroom');
     }
 
     public function edit(User $user, Classroom $classroom)
     {
-        return $user->can('edit-classroom') && $classroom->school_id == $user->employee?->school->id;
+        return $user->can('edit-classroom');
     }
 
     public function delete(User $user, Classroom $classroom)
     {
-        return $user->can('delete-classroom') && $classroom->school_id == $user->employee?->school->id;
+        return $user->can('delete-classroom');
     }
 }
