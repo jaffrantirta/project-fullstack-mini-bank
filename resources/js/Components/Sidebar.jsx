@@ -11,7 +11,7 @@ export default function Sidebar(props) {
                     <ApplicationLogo className='block h-9 w-auto fill-current text-gray-800' />
                 </div>
                 <nav className="mt-10 flex flex-col">
-                    <SideLink href={route('dashboard')} active={route().current('dashboard')}>
+                    <SideLink href={route('dashboard.index')} active={route().current('dashboard.index')}>
                         <BoltIcon className='h-6 mr-3' />
                         <span className="text-gray-800 font-medium">Dashboard</span>
                     </SideLink>
