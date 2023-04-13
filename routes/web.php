@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PrintController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('print/{id}', [PrintController::class, 'index'])->name('print.index');
     Route::resource('role', RoleController::class);
     Route::resource('classroom', ClassroomController::class);
+    Route::resource('account', AccountController::class);
 });
 
 require __DIR__ . '/auth.php';

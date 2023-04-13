@@ -32,14 +32,6 @@ class SchoolController extends Controller
             'schools' => $schools,
         ]);
     }
-    // public function index()
-    // {
-    //     $this->authorize('viewAny', School::class);
-    //     return Inertia::render('School/Index', [
-    //         'session' => session()->all(),
-    //         'schools' => School::latest()->paginate(),
-    //     ]);
-    // }
     public function create()
     {
         return Inertia::render('School/Create', [

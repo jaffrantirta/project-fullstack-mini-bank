@@ -87,7 +87,7 @@ export default function FormTransaction({ className, ...props }) {
                             <option value="">Pilih Akun</option>
                             {props.accounts.map((account) => (
                                 <option key={account.id} value={account.id}>
-                                    {account.name}
+                                    {account.code} - {account.name}
                                 </option>
                             ))}
                         </Select>
