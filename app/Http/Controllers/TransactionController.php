@@ -151,9 +151,9 @@ class TransactionController extends Controller
         DB::beginTransaction();
         if ($request->transaction_type === 'deposit')
             $user->deposit($request->amount, $this->getTransactionBaseMeta($request));
-        else if ($request->transaction_type === 'withdraw')
+        else if ($request->transaction_type === 'withdraw' && ($user->balance - $request->amount) >= 10000)
             $user->withdraw(abs($request->amount), $this->getTransactionBaseMeta($request));
-        else throw new \Exception('amount cannot be 0');
+        else return back()->withErrors(['final_balance' => 'The final balance must be at least 10,000']);
 
         $latest_id = $user->transactions()->latest()->first()->id;
 
