@@ -8,7 +8,7 @@ import { Transition } from '@headlessui/react';
 import Select from '@/Components/Select';
 
 export default function FormTransaction({ className, ...props }) {
-    const { data, setData, errors, post, reset, processing, recentlySuccessful } = useForm({
+    const { data, setData, errors, post, processing, recentlySuccessful } = useForm({
         transaction_type: '',
         amount: '',
         account_id: '',
@@ -67,6 +67,7 @@ export default function FormTransaction({ className, ...props }) {
                             onChange={(e) => setData('transaction_date', e.target.value)}
                             type="date"
                             className="mt-1 block w-full"
+                            {...props.session.roles.some(role => role.name === 'super-admin' || role.name === 'school-admin') ? { disabled: false } : { disabled: true }}
                         />
 
                         <InputError message={errors.transaction_date} className="mt-2" />
