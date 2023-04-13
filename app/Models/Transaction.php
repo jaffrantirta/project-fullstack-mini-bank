@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\LogsDefaultOptions;
 use Bavix\Wallet\Models\Transaction as ModelsTransaction;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Transaction extends ModelsTransaction
 {
@@ -16,5 +17,9 @@ class Transaction extends ModelsTransaction
     public function getAmountNumberFormatAttribute()
     {
         return number_format($this->amount);
+    }
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'payable_id');
     }
 }

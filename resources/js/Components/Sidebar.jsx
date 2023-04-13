@@ -1,5 +1,5 @@
 import React from 'react'
-import { BoltIcon, BuildingStorefrontIcon, DocumentDuplicateIcon, DocumentPlusIcon, FingerPrintIcon, HomeModernIcon, RectangleStackIcon, UsersIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, BuildingStorefrontIcon, ChartBarSquareIcon, DocumentDuplicateIcon, DocumentPlusIcon, FingerPrintIcon, HomeModernIcon, RectangleStackIcon, UsersIcon } from '@heroicons/react/24/solid'
 import SideLink from './SideLink'
 import ApplicationLogo from './ApplicationLogo'
 
@@ -36,7 +36,7 @@ export default function Sidebar(props) {
                         </>
                     )}
 
-                    {props.session.roles && props.session.roles.some(role => role.name === 'super-admin' || role.name === 'super-admin' || role.name === 'school-admin') && (
+                    {props.session.roles && props.session.roles.some(role => role.name === 'super-admin' || role.name === 'school-admin') && (
                         <>
                             <SideLink href={route('classroom.index')} active={route().current('classroom.index')}>
                                 <BuildingStorefrontIcon className='h-6 mr-3' />
@@ -59,6 +59,15 @@ export default function Sidebar(props) {
                             <SideLink href={route('transaction.index')} active={route().current('transaction.index')}>
                                 <DocumentDuplicateIcon className='h-6 mr-3' />
                                 <span className="text-gray-600">Transaksi</span>
+                            </SideLink>
+                        </>
+                    )}
+
+                    {props.session.roles && props.session.roles.some(role => role.name === 'super-admin' || role.name === 'school-admin') && (
+                        <>
+                            <SideLink href={route('report.index')} active={route().current('report.index')}>
+                                <ChartBarSquareIcon className='h-6 mr-3' />
+                                <span className="text-gray-600">Laporan</span>
                             </SideLink>
                         </>
                     )}

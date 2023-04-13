@@ -27,7 +27,7 @@ class TotalReportRequest extends FormRequest
     {
         return [
             'type' => ['sometimes', new Enum(TransactionTypes::class)],
-            'start_date' => ['prohibits:today', 'date', 'after:today'],
+            'start_date' => ['prohibits:today', 'date', 'before:today'],
             'end_date' => ['prohibits:today', 'date', 'after:start_date'],
             'today' => ['boolean', 'prohibits:start_date,end_date'],
         ];

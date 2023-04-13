@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
@@ -56,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('classroom', ClassroomController::class);
     Route::resource('account', AccountController::class);
     Route::resource('dashboard', DashboardController::class);
+    Route::resource('report', ReportController::class)->only('index');
+    Route::get('report/total', [ReportController::class, 'totalReport'])->name('report.total');
 });
 
 require __DIR__ . '/auth.php';
