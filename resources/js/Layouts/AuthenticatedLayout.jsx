@@ -9,7 +9,7 @@ export default function Authenticated({ auth, header, children, ...props }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
-        <div className='w-full bg-red-600 flex'>
+        <div className='w-full flex'>
             <Sidebar session={props.session} />
             <div className='flex-1'>
                 <div className="min-h-screen bg-gray-100">
@@ -87,6 +87,33 @@ export default function Authenticated({ auth, header, children, ...props }) {
                             <div className="pt-2 pb-3 space-y-1">
                                 <ResponsiveNavLink href={route('dashboard.index')} active={route().current('dashboard.index')}>
                                     Dashboard
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('school.index')} active={route().current('school.index')}>
+                                    Sekolah
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('employee.index')} active={route().current('employee.index')}>
+                                    Staff Sekolah
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('role.index')} active={route().current('role.index')}>
+                                    Hak Akses
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('account.index')} active={route().current('account.index')}>
+                                    Akun Transaksi
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('classroom.index')} active={route().current('classroom.index')}>
+                                    Kelas
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('student.index')} active={route().current('student.index')}>
+                                    Siswa
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('transaction.create')} active={route().current('transaction.create')}>
+                                    Buat Transaksi
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('transaction.index')} active={route().current('dashboard.index')}>
+                                    Transaksi
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('report.index')} active={route().current('report.index')}>
+                                    Laporan
                                 </ResponsiveNavLink>
                             </div>
 

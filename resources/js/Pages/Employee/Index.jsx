@@ -74,56 +74,61 @@ export default function Index(props) {
                     <TextInput id="search" type="search" placeholder="Pencarian..." onChange={(e) => setData('search', e.target.value)} />
                     <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
                 </form>
-                <div className='flex justify-end'>
+                <div className='flex mt-5 md:mt-0 justify-center md:justify-end'>
                     <Link href={route('employee.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
                 </div>
             </div>
 
 
+            <div className="">
+                <div className="overflow-x-auto">
+                    <div className="p-1.5 w-full inline-block align-middle">
+                        <div className='overflow-x-auto p-5 md:p-10'>
+                            <Table>
+                                <thead>
+                                    <Tr>
+                                        <Th>No.</Th>
+                                        <Th>NIP/Nomor Identitas</Th>
+                                        <Th>Nama</Th>
+                                        <Th>Email</Th>
+                                        <Th>Aksi</Th>
+                                    </Tr>
+                                </thead>
+                                <tbody>
+                                    {props.employees.data.length > 0 ? props.employees.data.map((employee, index) => (
+                                        <Tr key={index}>
+                                            <Td>{props.employees.from + index}</Td>
+                                            <Td>{employee.NIP}</Td>
+                                            <Td>{employee.user.name}</Td>
+                                            <Td>{employee.user.email}</Td>
+                                            <Td className={'flex gap-3'}>
+                                                <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.edit', employee.id)}>
+                                                    <PencilIcon className='h-5' />
+                                                </Link>
+                                                <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setData('id', employee.id);
+                                                    setConfirmingDeletion(true);
+                                                }}><TrashIcon className='h-5 text-red-400' /></Link>
+                                                <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.show', employee.id)}>
+                                                    <ArrowRightIcon className='h-5' />
+                                                </Link>
+                                            </Td>
+                                        </Tr>
+                                    )) : (
+                                        <Tr>
+                                            <Td colSpan={5} className={'text-center'}>
+                                                Tidak ada staff ditemukan.
+                                            </Td>
+                                        </Tr>
+                                    )}
+                                </tbody>
 
-            <div className='overflow-x-auto p-5 md:p-10'>
-                <Table>
-                    <thead>
-                        <Tr>
-                            <Th>No.</Th>
-                            <Th>NIP/Nomor Identitas</Th>
-                            <Th>Nama</Th>
-                            <Th>Email</Th>
-                            <Th>Aksi</Th>
-                        </Tr>
-                    </thead>
-                    <tbody>
-                        {props.employees.data.length > 0 ? props.employees.data.map((employee, index) => (
-                            <Tr key={index}>
-                                <Td>{props.employees.from + index}</Td>
-                                <Td>{employee.NIP}</Td>
-                                <Td>{employee.user.name}</Td>
-                                <Td>{employee.user.email}</Td>
-                                <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.edit', employee.id)}>
-                                        <PencilIcon className='h-5' />
-                                    </Link>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
-                                        e.preventDefault();
-                                        setData('id', employee.id);
-                                        setConfirmingDeletion(true);
-                                    }}><TrashIcon className='h-5 text-red-400' /></Link>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('employee.show', employee.id)}>
-                                        <ArrowRightIcon className='h-5' />
-                                    </Link>
-                                </Td>
-                            </Tr>
-                        )) : (
-                            <Tr>
-                                <Td colSpan={4} className={'text-center'}>
-                                    Tidak ada staff ditemukan.
-                                </Td>
-                            </Tr>
-                        )}
-                    </tbody>
-
-                </Table>
-                <Paginate className={'mt-5'} data={props.employees} />
+                            </Table>
+                            <Paginate className={'mt-5'} data={props.employees} />
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <Modal show={confirmingDeletion} onClose={closeModal}>

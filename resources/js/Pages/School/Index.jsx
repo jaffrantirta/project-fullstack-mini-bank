@@ -74,7 +74,7 @@ export default function Index(props) {
                     <TextInput id="search" type="search" placeholder="Pencarian..." onChange={(e) => setData('search', e.target.value)} />
                     <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
                 </form>
-                <div className='flex justify-end'>
+                <div className='flex mt-5 md:mt-0 justify-center md:justify-end'>
                     <Link href={route('school.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
                 </div>
             </div>
