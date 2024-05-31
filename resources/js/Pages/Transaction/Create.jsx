@@ -1,8 +1,8 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Head } from '@inertiajs/react'
-import React from 'react'
-import FormUser from './Partials/FormUser'
-import FormTransaction from './Partials/FormTransaction'
+import Authenticated from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import React from "react";
+import FormUser from "./Partials/FormUser";
+import FormTransaction from "./Partials/FormTransaction";
 
 export default function Create(props) {
     return (
@@ -15,7 +15,7 @@ export default function Create(props) {
                 </h2>
             }
         >
-            <Head title='Buat Transaksi Baru' />
+            <Head title="Transaksi" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -28,7 +28,6 @@ export default function Create(props) {
                     </div>
                 </div>
             </div>
-
         </Authenticated>
-    )
+    );
 }
