@@ -52,6 +52,7 @@ class ReinsertRolePermission extends Command
         Role::insert($this->getRoles());
         Permission::insert($this->getPermissions());
     }
+
     protected function createSuperAdminUser()
     {
         DB::table('users')->insert([
@@ -68,26 +69,24 @@ class ReinsertRolePermission extends Command
 
     protected function assignPermissionToRoles()
     {
-        //give super-admin all permission
+        // give super-admin all permission
         Role::findByName('super-admin', 'web')->givePermissionTo(
             Permission::get('name')->pluck('name')->toArray()
         );
 
-        //school-employee & school admin
+        // school-employee & school admin
         Role::findByName('school-employee', 'web')->givePermissionTo(
-            //classroom
+            // classroom
             'create-classroom',
             'create-many-classroom',
             'edit-classroom',
             'delete-classroom',
-
-            //student
+            // student
             'create-student',
             'create-many-student',
             'edit-student',
             'delete-student',
-
-            //student
+            // student
             'create-transaction',
             'create-many-transaction',
             'view-any-transaction',
@@ -95,26 +94,22 @@ class ReinsertRolePermission extends Command
         );
 
         Role::findByName('school-admin', 'web')->givePermissionTo(
-            //roles
+            // roles
             'assign-school-employee-role',
             'revoke-school-employee-role',
-
-            //school
+            // school
             'edit-school',
-
-            //classroom
+            // classroom
             'create-classroom',
             'create-many-classroom',
             'edit-classroom',
             'delete-classroom',
-
-            //student
+            // student
             'create-student',
             'create-many-student',
             'edit-student',
             'delete-student',
-
-            //student
+            // student
             'create-transaction',
             'create-many-transaction',
             'view-any-transaction',
@@ -122,7 +117,7 @@ class ReinsertRolePermission extends Command
         );
 
         Role::findByName('student-admin', 'web')->givePermissionTo(
-            //student
+            // student
             'create-transaction',
             'create-many-transaction',
             'view-any-transaction',
@@ -135,7 +130,7 @@ class ReinsertRolePermission extends Command
     protected function getPermissions(): array
     {
         return [
-            //roles
+            // roles
             [
                 'name' => 'assign-school-admin-role',
                 'guard_name' => 'web',
@@ -160,7 +155,7 @@ class ReinsertRolePermission extends Command
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            //school
+            // school
             [
                 'name' => 'create-school',
                 'guard_name' => 'web',
@@ -179,8 +174,7 @@ class ReinsertRolePermission extends Command
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
-            //classroom
+            // classroom
             [
                 'name' => 'create-classroom',
                 'guard_name' => 'web',
@@ -205,8 +199,7 @@ class ReinsertRolePermission extends Command
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
-            //employee
+            // employee
             [
                 'name' => 'create-employee',
                 'guard_name' => 'web',
@@ -231,8 +224,7 @@ class ReinsertRolePermission extends Command
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
-            //student
+            // student
             [
                 'name' => 'create-student',
                 'guard_name' => 'web',
@@ -257,8 +249,7 @@ class ReinsertRolePermission extends Command
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
-            //transaction
+            // transaction
             [
                 'name' => 'create-transaction',
                 'guard_name' => 'web',
