@@ -1,6 +1,15 @@
-import { forwardRef, useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from "react";
 
-export default forwardRef(function TextInput({ type = 'text', isTextArea = false, className = '', isFocused = false, ...props }, ref) {
+export default forwardRef(function TextInput(
+    {
+        type = "text",
+        isTextArea = false,
+        className = "",
+        isFocused = false,
+        ...props
+    },
+    ref
+) {
     const input = ref ? ref : useRef();
 
     useEffect(() => {
@@ -9,22 +18,23 @@ export default forwardRef(function TextInput({ type = 'text', isTextArea = false
         }
     }, []);
 
-    return (!isTextArea ?
+    return !isTextArea ? (
         <div className="flex flex-col items-start">
             <input
                 {...props}
                 type={type}
                 className={
-                    'border-gray-300 focus:border-primary focus:ring-primary rounded-md shadow-sm ' +
+                    "border-gray-300 focus:border-primary focus:ring-primary shadow-sm " +
                     className
                 }
                 ref={input}
             />
-        </div> :
+        </div>
+    ) : (
         <textarea
             {...props}
             className={
-                'border-gray-300 focus:border-primary-primary shadow-sm ' +
+                "border-gray-300 focus:border-primary-primary shadow-sm " +
                 className
             }
             ref={input}

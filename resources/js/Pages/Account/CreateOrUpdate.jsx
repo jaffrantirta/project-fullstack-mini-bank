@@ -1,7 +1,7 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Head } from '@inertiajs/react'
-import React from 'react'
-import FormAccount from './Partials/FormAccount'
+import Authenticated from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import React from "react";
+import FormAccount from "./Partials/FormAccount";
 
 export default function CreateOrUpdate(props) {
     return (
@@ -14,16 +14,15 @@ export default function CreateOrUpdate(props) {
                 </h2>
             }
         >
-            <Head title='Tambah Akun Transaksi' />
+            <Head title="Tambah Akun Transaksi" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div className="p-4 sm:p-8 bg-white shadow">
                         <FormAccount {...props} className="max-w-xl" />
                     </div>
                 </div>
             </div>
-
         </Authenticated>
-    )
+    );
 }

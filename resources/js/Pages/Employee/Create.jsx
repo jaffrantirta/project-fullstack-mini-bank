@@ -1,7 +1,7 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Head } from '@inertiajs/react'
-import React from 'react'
-import FormEmployee from './Partials/FormEmployee'
+import Authenticated from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import React from "react";
+import FormEmployee from "./Partials/FormEmployee";
 
 export default function Create(props) {
     return (
@@ -14,16 +14,18 @@ export default function Create(props) {
                 </h2>
             }
         >
-            <Head title='Tambah Staff Sekolah' />
+            <Head title="Tambah Staff Sekolah" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <FormEmployee schools={props.schools} className="max-w-xl" />
+                    <div className="p-4 sm:p-8 bg-white shadow ">
+                        <FormEmployee
+                            schools={props.schools}
+                            className="max-w-xl"
+                        />
                     </div>
                 </div>
             </div>
-
         </Authenticated>
-    )
+    );
 }

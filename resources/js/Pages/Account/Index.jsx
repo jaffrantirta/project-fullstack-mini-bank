@@ -1,25 +1,39 @@
-import DangerButton from '@/Components/DangerButton';
-import InputError from '@/Components/InputError';
-import Modal from '@/Components/Modal';
-import Paginate from '@/Components/Paginate';
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
-import Table from '@/Components/Table';
-import Td from '@/Components/Td';
-import TextInput from '@/Components/TextInput';
-import Th from '@/Components/Th';
-import Tr from '@/Components/Tr';
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
-import { Head, Link, useForm } from '@inertiajs/react'
-import React, { useState } from 'react'
+import DangerButton from "@/Components/DangerButton";
+import InputError from "@/Components/InputError";
+import Modal from "@/Components/Modal";
+import Paginate from "@/Components/Paginate";
+import PrimaryButton from "@/Components/PrimaryButton";
+import SecondaryButton from "@/Components/SecondaryButton";
+import Table from "@/Components/Table";
+import Td from "@/Components/Td";
+import TextInput from "@/Components/TextInput";
+import Th from "@/Components/Th";
+import Tr from "@/Components/Tr";
+import Authenticated from "@/Layouts/AuthenticatedLayout";
+import {
+    MagnifyingGlassIcon,
+    PencilIcon,
+    PlusIcon,
+    TrashIcon,
+} from "@heroicons/react/24/solid";
+import { Head, Link, useForm } from "@inertiajs/react";
+import React, { useState } from "react";
 
 export default function Index(props) {
     const [confirmingDeletion, setConfirmingDeletion] = useState(false);
-    const { data, setData, get, delete: destroy, errors, processing, reset, hasErrors } = useForm({
-        id: '',
-        search: '',
-        message: '',
+    const {
+        data,
+        setData,
+        get,
+        delete: destroy,
+        errors,
+        processing,
+        reset,
+        hasErrors,
+    } = useForm({
+        id: "",
+        search: "",
+        message: "",
     });
 
     const closeModal = () => {
@@ -30,7 +44,7 @@ export default function Index(props) {
     const deleteProcess = (e) => {
         e.preventDefault();
 
-        destroy(route('account.destroy', data.id), {
+        destroy(route("account.destroy", data.id), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onFinish: () => reset(),
@@ -43,44 +57,58 @@ export default function Index(props) {
         const search = data.search.trim();
 
         if (search) {
-            get(route('account.index', { q: search }), {
+            get(route("account.index", { q: search }), {
                 preserveScroll: true,
                 onSuccess: (data) => {
                     setData(data);
                 },
             });
         } else {
-            get(route('account.index'), {
+            get(route("account.index"), {
                 preserveScroll: true,
                 onSuccess: (data) => {
                     setData(data);
                 },
             });
         }
-    }
+    };
     return (
         <Authenticated
             auth={props.auth}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    {confirmingDeletion ? 'Hapus Akun Transaksi' : 'Akun Transaksi'}
+                    {confirmingDeletion
+                        ? "Hapus Akun Transaksi"
+                        : "Akun Transaksi"}
                 </h2>
             }
             session={props.session}
         >
-            <Head title='Akun Transaksi' />
+            <Head title="Akun Transaksi" />
 
-            <div className='grid grid-cols-1 md:grid-cols-2 p-10'>
+            <div className="grid grid-cols-1 md:grid-cols-2 p-10">
                 <form onSubmit={onSearch} className="flex gap-3">
-                    <TextInput id="search" type="search" placeholder="Pencarian..." onChange={(e) => setData('search', e.target.value)} />
-                    <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
+                    <TextInput
+                        id="search"
+                        type="search"
+                        placeholder="Pencarian..."
+                        onChange={(e) => setData("search", e.target.value)}
+                    />
+                    <PrimaryButton>
+                        <MagnifyingGlassIcon className="h-5 mr-2" />
+                        Cari
+                    </PrimaryButton>
                 </form>
-                <div className='flex mt-5 md:mt-0 justify-center md:justify-end'>
-                    <Link href={route('account.create')}><PrimaryButton><PlusIcon className='w-5 mr-3' /> Tambah</PrimaryButton></Link>
+                <div className="flex mt-5 md:mt-0 justify-center md:justify-end">
+                    <Link href={route("account.create")}>
+                        <PrimaryButton>
+                            <PlusIcon className="w-5 mr-3" /> Tambah
+                        </PrimaryButton>
+                    </Link>
                 </div>
             </div>
 
-            <div className='overflow-x-auto p-5 md:p-10'>
+            <div className="overflow-x-auto p-5 md:p-10">
                 <Table>
                     <thead>
                         <Tr>
@@ -96,19 +124,29 @@ export default function Index(props) {
                                 <Td>{props.accounts.from + index}</Td>
                                 <Td>{account.code}</Td>
                                 <Td>{account.name}</Td>
-                                <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('account.edit', account.id)}><PencilIcon className='h-5' /></Link>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' onClick={(e) => {
-                                        e.preventDefault();
-                                        setData('id', account.id);
-                                        setConfirmingDeletion(true);
-                                    }}><TrashIcon className='h-5 text-red-400' /></Link>
+                                <Td className={"flex gap-3"}>
+                                    <Link
+                                        className="hover:bg-gray-200 p-2 "
+                                        href={route("account.edit", account.id)}
+                                    >
+                                        <PencilIcon className="h-5" />
+                                    </Link>
+                                    <Link
+                                        className="hover:bg-gray-200 p-2 "
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setData("id", account.id);
+                                            setConfirmingDeletion(true);
+                                        }}
+                                    >
+                                        <TrashIcon className="h-5 text-red-400" />
+                                    </Link>
                                 </Td>
                             </Tr>
                         ))}
                     </tbody>
                 </Table>
-                <Paginate className={'mt-5'} data={props.accounts} />
+                <Paginate className={"mt-5"} data={props.accounts} />
             </div>
 
             <Modal show={confirmingDeletion} onClose={closeModal}>
@@ -118,14 +156,16 @@ export default function Index(props) {
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Hanya akun transaksi yang tidak digunakan yang dapat dihapus.
+                        Hanya akun transaksi yang tidak digunakan yang dapat
+                        dihapus.
                     </p>
 
                     {hasErrors && <InputError message={errors.message} />}
 
-
                     <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>Batal</SecondaryButton>
+                        <SecondaryButton onClick={closeModal}>
+                            Batal
+                        </SecondaryButton>
 
                         <DangerButton className="ml-3" disabled={processing}>
                             Ya, Hapus!
@@ -134,5 +174,5 @@ export default function Index(props) {
                 </form>
             </Modal>
         </Authenticated>
-    )
+    );
 }

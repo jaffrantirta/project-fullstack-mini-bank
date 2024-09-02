@@ -1,19 +1,19 @@
-import Paginate from '@/Components/Paginate';
-import PrimaryButton from '@/Components/PrimaryButton';
-import Table from '@/Components/Table';
-import Td from '@/Components/Td';
-import TextInput from '@/Components/TextInput';
-import Th from '@/Components/Th';
-import Tr from '@/Components/Tr';
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { ArrowRightIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-import { Head, Link, useForm } from '@inertiajs/react'
-import moment from 'moment';
-import React from 'react'
+import Paginate from "@/Components/Paginate";
+import PrimaryButton from "@/Components/PrimaryButton";
+import Table from "@/Components/Table";
+import Td from "@/Components/Td";
+import TextInput from "@/Components/TextInput";
+import Th from "@/Components/Th";
+import Tr from "@/Components/Tr";
+import Authenticated from "@/Layouts/AuthenticatedLayout";
+import { ArrowRightIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { Head, Link, useForm } from "@inertiajs/react";
+import moment from "moment";
+import React from "react";
 
 export default function Index(props) {
     const { data, setData, get } = useForm({
-        search: '',
+        search: "",
     });
 
     console.log(props);
@@ -24,21 +24,21 @@ export default function Index(props) {
         const search = data.search.trim();
 
         if (search) {
-            get(route('transaction.index', { q: search }), {
+            get(route("transaction.index", { q: search }), {
                 preserveScroll: true,
                 onSuccess: (data) => {
                     setData(data);
                 },
             });
         } else {
-            get(route('transaction.index'), {
+            get(route("transaction.index"), {
                 preserveScroll: true,
                 onSuccess: (data) => {
                     setData(data);
                 },
             });
         }
-    }
+    };
     return (
         <Authenticated
             auth={props.auth}
@@ -49,18 +49,24 @@ export default function Index(props) {
                 </h2>
             }
         >
-            <Head title='Transaksi' />
+            <Head title="Transaksi" />
 
-            <div className='grid grid-cols-1 md:grid-cols-2 p-10'>
+            <div className="grid grid-cols-1 md:grid-cols-2 p-10">
                 <form onSubmit={onSearch} className="flex gap-3">
-                    <TextInput id="search" type="search" placeholder="Cari Kode Ref ..." onChange={(e) => setData('search', e.target.value)} />
-                    <PrimaryButton><MagnifyingGlassIcon className='h-5 mr-2' />Cari</PrimaryButton>
+                    <TextInput
+                        id="search"
+                        type="search"
+                        placeholder="Cari Kode Ref ..."
+                        onChange={(e) => setData("search", e.target.value)}
+                    />
+                    <PrimaryButton>
+                        <MagnifyingGlassIcon className="h-5 mr-2" />
+                        Cari
+                    </PrimaryButton>
                 </form>
             </div>
 
-
-
-            <div className='overflow-x-auto p-5 md:p-10'>
+            <div className="overflow-x-auto p-5 md:p-10">
                 <Table>
                     <thead>
                         <Tr>
@@ -73,32 +79,49 @@ export default function Index(props) {
                         </Tr>
                     </thead>
                     <tbody>
-                        {props.transactions.data.length > 0 ? props.transactions.data.map((transaction, index) => (
-                            <Tr key={index}>
-                                <Td>{props.transactions.from + index}</Td>
-                                <Td>{transaction.meta.code}</Td>
-                                <Td>{moment(transaction.meta.date).format('LL')}</Td>
-                                <Td className={'text-right'}>Rp.{transaction.amount_number_format}</Td>
-                                <Td>{transaction.type_att}</Td>
-                                <Td className={'flex gap-3'}>
-                                    <Link className='hover:bg-gray-200 p-2 rounded-full' href={route('transaction.show', transaction.id)}>
-                                        <ArrowRightIcon className='h-5' />
-                                    </Link>
-                                </Td>
-                            </Tr>
-                        )) : (
+                        {props.transactions.data.length > 0 ? (
+                            props.transactions.data.map(
+                                (transaction, index) => (
+                                    <Tr key={index}>
+                                        <Td>
+                                            {props.transactions.from + index}
+                                        </Td>
+                                        <Td>{transaction.meta.code}</Td>
+                                        <Td>
+                                            {moment(
+                                                transaction.meta.date
+                                            ).format("LL")}
+                                        </Td>
+                                        <Td className={"text-right"}>
+                                            Rp.
+                                            {transaction.amount_number_format}
+                                        </Td>
+                                        <Td>{transaction.type_att}</Td>
+                                        <Td className={"flex gap-3"}>
+                                            <Link
+                                                className="hover:bg-gray-200 p-2 "
+                                                href={route(
+                                                    "transaction.show",
+                                                    transaction.id
+                                                )}
+                                            >
+                                                <ArrowRightIcon className="h-5" />
+                                            </Link>
+                                        </Td>
+                                    </Tr>
+                                )
+                            )
+                        ) : (
                             <Tr>
-                                <Td colSpan={5} className={'text-center'}>
+                                <Td colSpan={5} className={"text-center"}>
                                     Tidak ada data.
                                 </Td>
                             </Tr>
                         )}
                     </tbody>
-
                 </Table>
-                <Paginate className={'mt-5'} data={props.transactions} />
+                <Paginate className={"mt-5"} data={props.transactions} />
             </div>
-
         </Authenticated>
-    )
+    );
 }
