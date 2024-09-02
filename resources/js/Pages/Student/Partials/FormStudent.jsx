@@ -1,36 +1,46 @@
-import { useRef } from 'react';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
-import Select from '@/Components/Select';
+import { useRef } from "react";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import { useForm } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
+import Select from "@/Components/Select";
 
 export default function FormStudent({ className, ...props }) {
-    const { data, setData, errors, post, put, reset, processing, recentlySuccessful } = useForm({
-        name: props.student?.user.name || '',
-        nis: props.student?.NIS || '',
-        email: props.student?.user.email || '',
-        classroom_id: props.student?.classroom_id || '',
+    const {
+        data,
+        setData,
+        errors,
+        post,
+        put,
+        reset,
+        processing,
+        recentlySuccessful,
+    } = useForm({
+        name: props.student?.user.name || "",
+        nis: props.student?.NIS || "",
+        email: props.student?.user.email || "",
+        classroom_id: props.student?.classroom_id || "",
     });
     console.log(props);
 
     const onSubmit = (e) => {
         e.preventDefault();
-        props.isUpdate ?
-            put(route('student.update', props.student.id))
-            :
-            post(route('student.store'), {
-                preserveScroll: true,
-                onSuccess: () => reset(),
-            });
+        props.isUpdate
+            ? put(route("student.update", props.student.id))
+            : post(route("student.store"), {
+                  preserveScroll: true,
+                  onSuccess: () => reset(),
+              });
     };
 
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Siswa Sekolah</h2>
+                <h2 className="text-lg font-medium text-gray-900">
+                    Siswa Sekolah
+                </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
                     Masukan data siswa sekolah
@@ -44,7 +54,7 @@ export default function FormStudent({ className, ...props }) {
                     <TextInput
                         id="name"
                         value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={(e) => setData("name", e.target.value)}
                         type="text"
                         className="mt-1 block w-full"
                     />
@@ -58,7 +68,7 @@ export default function FormStudent({ className, ...props }) {
                     <TextInput
                         id="nis"
                         value={data.nis}
-                        onChange={(e) => setData('nis', e.target.value)}
+                        onChange={(e) => setData("nis", e.target.value)}
                         type="text"
                         className="mt-1 block w-full"
                     />
@@ -72,7 +82,7 @@ export default function FormStudent({ className, ...props }) {
                     <TextInput
                         id="email"
                         value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => setData("email", e.target.value)}
                         type="text"
                         className="mt-1 block w-full"
                     />
@@ -88,19 +98,24 @@ export default function FormStudent({ className, ...props }) {
                         name="classroom_id"
                         className="mt-1 block w-full"
                         value={data.classroom_id}
-                        onChange={(e) => setData('classroom_id', e.target.value)}
+                        onChange={(e) =>
+                            setData("classroom_id", e.target.value)
+                        }
                         required
                     >
                         <option value="">Pilih kelas</option>
                         {props.classrooms.map((classroom) => (
-                            <option key={classroom.id} value={classroom.id}>{classroom.class} {classroom.name} - {classroom.school.name}</option>
+                            <option key={classroom.id} value={classroom.id}>
+                                {classroom.class} {classroom.name}
+                            </option>
                         ))}
                     </Select>
 
-
-                    <InputError className="mt-2" message={errors.classroom_id} />
+                    <InputError
+                        className="mt-2"
+                        message={errors.classroom_id}
+                    />
                 </div>
-
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Simpan</PrimaryButton>

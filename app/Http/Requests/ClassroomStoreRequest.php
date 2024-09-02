@@ -27,7 +27,7 @@ class ClassroomStoreRequest extends FormRequest
         return [
             'class' => ['required', 'string'],
             'name' => ['required', 'string'],
-            'year' => ['required', 'date_format:Y'],
+            'year' => ['required', 'regex:/^\d{4}\/\d{4}$/'],
             'school_id' => ['required', 'exists:schools,id'],
         ];
     }

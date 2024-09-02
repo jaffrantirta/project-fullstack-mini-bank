@@ -25,4 +25,20 @@ class UserController extends Controller
             'transaction_code' => auth()->user()->id . '-' . now()->timestamp,
         ]);
     }
+
+    public function check($account_number)
+    {
+        $user = Employee::where('nip', $account_number)->with('user')->first();
+        if (!$user) {
+            $user = Student::where('nis', $account_number)->with('user')->with('classroom')->first();
+        }
+        // dd([
+        //     'session' => session()->all(),
+        //     'user' => $user
+        // ]);
+        return Inertia::render('Role/Create', [
+            'session' => session()->all(),
+            'user' => $user
+        ]);
+    }
 }

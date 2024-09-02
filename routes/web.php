@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('student', StudentController::class);
     Route::resource('transaction', TransactionController::class);
     Route::get('transaction/find/{account_number}', [UserController::class, 'show'])->name('transaction.show.user');
+    Route::get('roleuser/check/{account_number}', [UserController::class, 'check'])->name('role.check.user');
     Route::get('print/{id}', [PrintController::class, 'index'])->name('print.index');
     Route::resource('role', RoleController::class);
     Route::resource('classroom', ClassroomController::class);

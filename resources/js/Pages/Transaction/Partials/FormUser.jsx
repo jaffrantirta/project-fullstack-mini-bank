@@ -1,78 +1,112 @@
-import { useEffect, useRef } from 'react';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
-import Select from '@/Components/Select';
+import { useEffect, useRef } from "react";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import { useForm } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
+import Select from "@/Components/Select";
 
 export default function FormUser({ className, ...props }) {
-    const { data, setData, errors, post, put, get, reset, processing, recentlySuccessful } = useForm({
-        user_account_number: props.user?.NIP || props.user?.NIS || '',
-        transaction_code: props.transaction_code || '',
-        transaction_type: '',
-        name: props.user?.user.name || '',
-        email: props.user?.user.email || '',
-        classroom: props.user?.classroom?.name || '',
-        balance: props.balance || '',
+    const {
+        data,
+        setData,
+        errors,
+        post,
+        put,
+        get,
+        reset,
+        processing,
+        recentlySuccessful,
+    } = useForm({
+        user_account_number: props.user?.NIP || props.user?.NIS || "",
+        transaction_code: props.transaction_code || "",
+        transaction_type: "",
+        name: props.user?.user.name || "",
+        email: props.user?.user.email || "",
+        classroom: props.user?.classroom?.name || "",
+        balance: props.balance || "",
     });
     console.log(props);
 
     const onSubmit = (e) => {
         e.preventDefault();
-        get(route('transaction.show.user', data.user_account_number))
+        get(route("transaction.show.user", data.user_account_number));
     };
 
     useEffect(() => {
         if (props.reset) reset();
-    }, [])
-
+    }, []);
 
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Masukan No. Rekening</h2>
+                <h2 className="text-lg font-medium text-gray-900">
+                    Masukan No. Rekening
+                </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
-
-                </p>
+                <p className="mt-1 text-sm text-gray-600"></p>
             </header>
 
             <form onSubmit={onSubmit} className="mt-6 space-y-6">
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <InputLabel htmlFor="transaction_code" value="No. Transaksi" />
+                        <InputLabel
+                            htmlFor="transaction_code"
+                            value="No. Transaksi"
+                        />
 
                         <TextInput
                             id="transaction_code"
                             value={data.transaction_code}
-                            onChange={(e) => setData('transaction_code', e.target.value)}
+                            onChange={(e) =>
+                                setData("transaction_code", e.target.value)
+                            }
                             type="text"
                             className="mt-1 block w-full"
                             disabled
                         />
 
-                        <InputError message={errors.transaction_code} className="mt-2" />
+                        <InputError
+                            message={errors.transaction_code}
+                            className="mt-2"
+                        />
                     </div>
 
                     <div>
-                        <InputLabel htmlFor="user_account_number" value="No. Rekening" />
+                        <InputLabel
+                            htmlFor="user_account_number"
+                            value="No. Rekening"
+                        />
 
                         <TextInput
                             id="user_account_number"
                             value={data.user_account_number}
-                            onChange={(e) => setData('user_account_number', e.target.value)}
+                            onChange={(e) =>
+                                setData("user_account_number", e.target.value)
+                            }
                             type="text"
                             className="mt-1 block w-full"
                         />
 
-                        <InputError message={errors.user_account_number} className="mt-2" />
-                        <InputError message={props.isEmpty ? 'No. Rekening tidak ditemukan' : ''} className="mt-2" />
+                        <InputError
+                            message={errors.user_account_number}
+                            className="mt-2"
+                        />
+                        <InputError
+                            message={
+                                props.isEmpty
+                                    ? "No. Rekening tidak ditemukan"
+                                    : ""
+                            }
+                            className="mt-2"
+                        />
                     </div>
 
                     <div className="flex items-center gap-4 mt-5">
-                        <PrimaryButton disabled={processing}>Cari</PrimaryButton>
+                        <PrimaryButton disabled={processing}>
+                            Cari
+                        </PrimaryButton>
 
                         <Transition
                             show={recentlySuccessful}
@@ -87,15 +121,14 @@ export default function FormUser({ className, ...props }) {
 
                 <hr></hr>
 
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <InputLabel htmlFor="name" value="Nama" />
 
                         <TextInput
                             id="name"
                             value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
+                            onChange={(e) => setData("name", e.target.value)}
                             type="text"
                             className="mt-1 block w-full"
                             disabled
@@ -104,7 +137,7 @@ export default function FormUser({ className, ...props }) {
                         <InputError message={errors.name} className="mt-2" />
                     </div>
 
-                    <div>
+                    {/* <div>
                         <InputLabel htmlFor="email" value="Email" />
 
                         <TextInput
@@ -117,7 +150,7 @@ export default function FormUser({ className, ...props }) {
                         />
 
                         <InputError message={errors.email} className="mt-2" />
-                    </div>
+                    </div> */}
 
                     <div>
                         <InputLabel htmlFor="classroom" value="Kelas" />
@@ -125,13 +158,18 @@ export default function FormUser({ className, ...props }) {
                         <TextInput
                             id="classroom"
                             value={data.classroom}
-                            onChange={(e) => setData('classroom', e.target.value)}
+                            onChange={(e) =>
+                                setData("classroom", e.target.value)
+                            }
                             type="text"
                             className="mt-1 block w-full"
                             disabled
                         />
 
-                        <InputError message={errors.classroom} className="mt-2" />
+                        <InputError
+                            message={errors.classroom}
+                            className="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -140,7 +178,7 @@ export default function FormUser({ className, ...props }) {
                         <TextInput
                             id="balance"
                             value={data.balance}
-                            onChange={(e) => setData('balance', e.target.value)}
+                            onChange={(e) => setData("balance", e.target.value)}
                             type="text"
                             className="mt-1 block w-full"
                             disabled

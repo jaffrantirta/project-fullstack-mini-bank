@@ -25,7 +25,8 @@ class AccountStoreRequest extends FormRequest
     {
         return [
             'code' => ['required'],
-            'name' => ['required']
+            'name' => ['required'],
+            'type' => ['required', 'in:deposit,withdraw'],
         ];
     }
 }

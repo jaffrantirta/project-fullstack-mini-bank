@@ -1,24 +1,35 @@
-import { useRef } from 'react';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
+import { useRef } from "react";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import { useForm } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
 
 export default function FormAccount({ className, ...props }) {
-    const { data, setData, errors, post, put, reset, processing, recentlySuccessful } = useForm({
-        name: props.account?.name || '',
-        code: props.account?.code || '',
+    const {
+        data,
+        setData,
+        errors,
+        post,
+        put,
+        reset,
+        processing,
+        recentlySuccessful,
+    } = useForm({
+        name: props.account?.name || "",
+        code: props.account?.code || "",
+        type: props.account?.type || "",
     });
 
     const onSubmit = (e) => {
         e.preventDefault();
-        props.isUpdate ? put(route('account.update', props.account.id)) :
-            post(route('account.store'), {
-                preserveScroll: true,
-                onSuccess: () => reset(),
-            });
+        props.isUpdate
+            ? put(route("account.update", props.account.id))
+            : post(route("account.store"), {
+                  preserveScroll: true,
+                  onSuccess: () => reset(),
+              });
     };
 
     return (
@@ -26,9 +37,7 @@ export default function FormAccount({ className, ...props }) {
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Sekolah</h2>
 
-                <p className="mt-1 text-sm text-gray-600">
-
-                </p>
+                <p className="mt-1 text-sm text-gray-600"></p>
             </header>
 
             <form onSubmit={onSubmit} className="mt-6 space-y-6">
@@ -38,7 +47,7 @@ export default function FormAccount({ className, ...props }) {
                     <TextInput
                         id="code"
                         value={data.code}
-                        onChange={(e) => setData('code', e.target.value)}
+                        onChange={(e) => setData("code", e.target.value)}
                         className="mt-1 block w-full"
                     />
 
@@ -51,12 +60,31 @@ export default function FormAccount({ className, ...props }) {
                     <TextInput
                         id="name"
                         value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={(e) => setData("name", e.target.value)}
                         type="text"
                         className="mt-1 block w-full"
                     />
 
                     <InputError message={errors.name} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="type" value="Tipe" />
+
+                    <select
+                        id="type"
+                        name="type"
+                        className="mt-1 block w-full"
+                        value={data.type}
+                        onChange={(e) => setData("type", e.target.value)}
+                        required
+                    >
+                        <option value="">Pilih</option>
+                        <option value="deposit">Deposit</option>
+                        <option value="withdraw">Withdraw</option>
+                    </select>
+
+                    <InputError message={errors.type} className="mt-2" />
                 </div>
 
                 <div className="flex items-center gap-4">
