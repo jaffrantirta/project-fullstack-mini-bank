@@ -1,0 +1,1 @@
+import{r,a as f}from"./app-75ecb23e.js";const i=r.forwardRef(function({className:o="",isFocused:t=!1,children:a,...c},e){const s=e||r.useRef();return r.useEffect(()=>{t&&s.current.focus()},[]),f("select",{...c,className:"border-gray-300 focus:border-primary focus:ring-primary shadow-sm "+o,ref:s,children:a})});export{i as S};
